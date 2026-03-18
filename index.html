@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquí Reciclo + | Reciclaje Profesional en El Salvador</title>
+    <meta name="description"
+        content="Soluciones de recolección a medida para empresas y puntos de acopio. Ecospots, servicios B2B de reciclaje, con impacto real en El Salvador.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: #f4f9f5;
+            overflow-x: hidden;
+        }
+
+        /* ─── Global entry animations ─── */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(36px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-48px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(48px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        [data-anim] {
+            opacity: 0;
+        }
+
+        [data-anim].in {
+            animation-fill-mode: both;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+            animation-duration: 0.8s;
+            opacity: 1;
+        }
+
+        [data-anim="up"].in {
+            animation-name: fadeInUp;
+        }
+
+        [data-anim="left"].in {
+            animation-name: slideInLeft;
+        }
+
+        [data-anim="right"].in {
+            animation-name: slideInRight;
+        }
+
+        [data-delay="1"].in {
+            animation-delay: 0.1s;
+        }
+
+        [data-delay="2"].in {
+            animation-delay: 0.2s;
+        }
+
+        [data-delay="3"].in {
+            animation-delay: 0.3s;
+        }
+
+        [data-delay="4"].in {
+            animation-delay: 0.4s;
+        }
+
+        [data-delay="5"].in {
+            animation-delay: 0.5s;
+        }
+
+        /* ─── Sticky nav ─── */
+        #site-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            height: 80px;
+            background: #073b2bd9;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+        }
+
+        /* ─── Hero ─── */
+        #hero-section {
+            position: relative;
+            width: 100%;
+            /* Hero fills remainder of viewport after nav, Stats Bar = 120px */
+            height: calc(100vh - 120px);
+            min-height: 540px;
+            background: #052f23;
+            overflow: hidden;
+        }
+
+        .hero-video-wrap {
+            position: absolute;
+            inset: 0;
+        }
+
+        .hero-video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.24;
+        }
+
+        /* Stats bar = exactly 120px, together with hero = 100vh */
+        #stats-bar {
+            height: 120px;
+            background: #cef17b;
+            border-top: 1px solid #0a3d30;
+            border-bottom: 1px solid #0a3d30;
+        }
+
+        /* ─── Sticky Stacking Cards ─── */
+        /*
+          TRUE Stacked-Cards with Sticky Positioning:
+          The outer wrapper is a scroll container sized to create enough scroll room.
+          Each card is sticky with an increasing top value so they literally stack up.
+          Card 2 covers card 1, card 3 covers card 2, etc.
+        */
+        #b2b-section {
+            background: #f5fce5;
+            padding: 80px 0 0;
+        }
+
+        .stacked-cards {
+            /* Each card is ~420px tall. With 3 cards and stacking offset:
+               We need (cards-1)*cardHeight extra scroll space for the stacking.
+               Cards stick at top: 80px (nav), 95px, 110px to create the offset illusion. */
+            position: relative;
+        }
+
+        .s-card {
+            position: sticky;
+            border-radius: 36px;
+            border: 1px solid #84b413;
+            margin: 0 100px;
+            overflow: hidden;
+            /* Slight scale for depth illusion; overridden by JS */
+            transform-origin: top center;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+        }
+
+        .s-card:nth-child(1) {
+            top: 96px;
+            z-index: 10;
+            background: #e2f7b0;
+        }
+
+        .s-card:nth-child(2) {
+            top: 108px;
+            z-index: 20;
+            background: #def2ad;
+            margin-bottom: 0;
+        }
+
+        .s-card:nth-child(3) {
+            top: 120px;
+            z-index: 30;
+            background: #def2ad;
+        }
+
+        /* Space between cards when not stacked yet */
+        .s-card+.s-card {
+            margin-top: 24px;
+        }
+
+        /* Push area: makes page tall enough to scroll through the stack */
+        .stacked-cards-spacer {
+            height: 60vh;
+        }
+
+        /* Inner card layout */
+        .s-card-inner {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 72px 56px;
+            min-height: 420px;
+        }
+
+        .s-card-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .s-card-img {
+            flex-shrink: 0;
+            width: clamp(300px, 36%, 500px);
+            aspect-ratio: 3/2;
+            border-radius: 24px;
+            background-size: cover;
+            background-position: center;
+            /* entry animation */
+            opacity: 0;
+            transform: translateX(32px) scale(0.97);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.18s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.18s;
+        }
+
+        .s-card-text>* {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .s-card-text>*:nth-child(1) {
+            transition-delay: 0.05s;
+        }
+
+        .s-card-text>*:nth-child(2) {
+            transition-delay: 0.15s;
+        }
+
+        .s-card-text>*:nth-child(3) {
+            transition-delay: 0.25s;
+        }
+
+        .s-card-text>*:nth-child(4) {
+            transition-delay: 0.35s;
+        }
+
+        .s-card.card-visible .s-card-text>* {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .s-card.card-visible .s-card-img {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* ─── Text animated ─── */
+        .blur-word {
+            display: inline-block;
+            margin-right: 0.28em;
+            transition: filter 0.3s ease-out, opacity 0.3s ease-out;
+        }
+
+        /* ─── Material cards ─── */
+        .mat-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: default;
+        }
+
+        .mat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(14, 135, 99, 0.18);
+        }
+
+        /* ─── Blog cards ─── */
+        .blog-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ─── Responsive: no max-width cap on the full page ─── */
+        .page-wrap {
+            width: 100%;
+        }
+
+        /* Content inside sections is capped at 1440px and centred */
+        .section-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* ─── Hamburger button (hidden on desktop) ─── */
+        #hamburger-btn {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            z-index: 1001;
+        }
+        #hamburger-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: #fff;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        #hamburger-btn.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        #hamburger-btn.open span:nth-child(2) {
+            opacity: 0;
+        }
+        #hamburger-btn.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* ─── Mobile Menu Overlay ─── */
+        #mobile-menu {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(5,47,35,0.97);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 36px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #mobile-menu.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+        #mobile-menu a {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+            text-decoration: none;
+            font-family: 'Raleway', sans-serif;
+            transition: color 0.2s;
+        }
+        #mobile-menu a:hover { color: #cef17b; }
+        #mobile-menu .menu-cta {
+            background: #cef17b;
+            padding: 16px 40px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Raleway', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #084734;
+            margin-top: 12px;
+        }
+
+        /* ════════════════════════════════════
+           MOBILE BREAKPOINT — W ≤ 809px
+           Mirroring Landing Page Mobile .pen
+        ════════════════════════════════════ */
+        @media (max-width: 809px) {
+
+            /* NAV */
+            #site-nav {
+                padding: 0 20px;
+            }
+            #site-nav > div:nth-child(2),
+            #site-nav > button:last-child {
+                display: none !important;
+            }
+            #hamburger-btn {
+                display: flex;
+            }
+
+            /* HERO */
+            #hero-section {
+                height: 703px !important;
+                min-height: 703px !important;
+            }
+            #hero-section .hero-content-wrapper {
+                padding: 0 20px;
+                top: 145px;
+            }
+            #hero-section p[data-anim] {
+                font-size: 16px !important;
+                max-width: 100% !important;
+            }
+            #hero-section div[data-delay="3"] {
+                flex-direction: column;
+                width: 100%;
+            }
+            #hero-section div[data-delay="3"] button {
+                width: 100%;
+            }
+
+            /* STATS BAR */
+            #stats-bar {
+                height: auto !important;
+            }
+            #stats-bar .section-inner {
+                flex-direction: column !important;
+                padding: 40px 20px !important;
+                gap: 32px !important;
+                align-items: center;
+            }
+
+            /* TEXT ANIMATED */
+            #text-animated-section {
+                height: auto !important;
+                padding: 40px 20px !important;
+            }
+            #text-animated-section #blur-reveal-text {
+                font-size: 24px !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
+
+            /* SERVICIOS B2B */
+            #b2b-section {
+                padding: 48px 20px !important;
+            }
+            /* Each sticky card becomes non-sticky & stacks */
+            .s-card {
+                position: relative !important;
+                top: auto !important;
+                height: auto !important;
+                margin-bottom: 24px;
+            }
+            .stacked-cards {
+                height: auto !important;
+                padding-bottom: 0 !important;
+            }
+            .s-card-inner {
+                flex-direction: column !important;
+                padding: 32px 24px !important;
+                gap: 40px !important;
+                border-radius: 24px !important;
+                height: auto !important;
+                min-height: auto !important;
+            }
+            .s-card-text {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            .s-card-img {
+                width: 100% !important;
+                height: 240px !important;
+                border-radius: 16px !important;
+                flex-shrink: 0 !important;
+            }
+            /* Hide the ecospots frame that overlaps after cards on mobile */
+            #b2b-section + section[id="ecospots"] {
+                margin-top: 0;
+            }
+
+            /* ECOSPOTS */
+            #ecospots {
+                padding: 60px 20px !important;
+                border-radius: 20px 20px 0 0 !important;
+            }
+            #ecospots > div {
+                padding: 0 !important;
+            }
+            /* Steps inside ecospots: stack vertically */
+            #ecospots div[style*="flex-wrap:wrap"] {
+                flex-direction: column !important;
+            }
+
+            /* MATERIALES */
+            #materiales {
+                padding: 60px 20px !important;
+            }
+            #materiales h2 {
+                font-size: 32px !important;
+            }
+            /* 2 columns grid */
+            #materiales > div > div:last-child {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 16px !important;
+            }
+
+            /* SOBRE NOSOTROS */
+            #materiales + section {
+                padding: 60px 20px !important;
+            }
+            #materiales + section > div > div {
+                flex-direction: column !important;
+                gap: 24px !important;
+            }
+            #materiales + section h2 {
+                font-size: 28px !important;
+            }
+            /* Hide the decorative photo on mobile */
+            #materiales + section div[data-anim="right"] {
+                display: none !important;
+            }
+            /* Value cards stack */
+            #materiales + section div[style*="gap:16px"] {
+                flex-direction: column !important;
+            }
+            #materiales + section div[style*="width:156px"] {
+                width: 100% !important;
+            }
+
+            /* CENTRO DE RECURSOS */
+            #recursos {
+                padding: 60px 20px !important;
+            }
+            #recursos > div > div:first-child {
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+            #recursos > div > div:last-child {
+                flex-direction: column !important;
+            }
+            .blog-card {
+                min-width: auto !important;
+                width: 100% !important;
+            }
+
+            /* NEWSLETTER */
+            section[style*="background:#cef17b"] {
+                padding: 60px 20px !important;
+                min-height: auto !important;
+            }
+            section[style*="background:#cef17b"] h2 {
+                font-size: 28px !important;
+                max-width: 100% !important;
+            }
+            section[style*="background:#cef17b"] p {
+                max-width: 100% !important;
+            }
+            section[style*="background:#cef17b"] form {
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+            section[style*="background:#cef17b"] form input,
+            section[style*="background:#cef17b"] form button {
+                width: 100% !important;
+            }
+
+            /* FOOTER */
+            #footer {
+                padding: 40px 20px !important;
+            }
+            #footer > div > div:first-child {
+                flex-direction: column !important;
+                gap: 40px !important;
+            }
+            #footer > div > div:last-child {
+                flex-direction: column !important;
+                gap: 16px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ FIXED NAV ═══ -->
+    <nav id="site-nav">
+        <div class="flex items-center gap-[12px]" style="flex-shrink:0;">
+            <!-- Logo directly from SVG -->
+            <img src="Logo.svg" alt="Aquí Reciclo +" style="height:40px; width:auto; filter:brightness(0) invert(1);" />
+        </div>
+        <div style="display:flex;align-items:center;gap:36px;">
+            <a href="#b2b-section"
+                style="color:#7ef0ce;font-size:14px;font-weight:500;text-decoration:none;opacity:1;transition:opacity .2s"
+                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Servicios B2B</a>
+            <a href="#ecospots" style="color:#fff;font-size:14px;font-weight:500;text-decoration:none;"
+                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Ecospots</a>
+            <a href="#materiales" style="color:#fff;font-size:14px;font-weight:500;text-decoration:none;"
+                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Materiales</a>
+            <a href="#recursos" style="color:#fff;font-size:14px;font-weight:500;text-decoration:none;"
+                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Guías</a>
+            <a href="#footer" style="color:#fff;font-size:14px;font-weight:500;text-decoration:none;"
+                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Contacto</a>
+        </div>
+        <button onclick="this.style.transform='scale(0.95)';setTimeout(()=>this.style.transform='',150)"
+            style="background:#cef17b;padding:12px 24px;border-radius:40px;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-size:14px;font-weight:700;color:#084734;transition:transform .15s">
+            Solicitar Visita
+        </button>
+        <!-- Hamburger button — only visible on mobile -->
+        <button id="hamburger-btn" aria-label="Abrir menú" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- ═══ MOBILE MENU OVERLAY ═══ -->
+    <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menú de navegación">
+        <a href="#b2b-section" class="mobile-nav-link">Servicios B2B</a>
+        <a href="#ecospots" class="mobile-nav-link">Ecospots</a>
+        <a href="#materiales" class="mobile-nav-link">Materiales</a>
+        <a href="#recursos" class="mobile-nav-link">Guías</a>
+        <a href="#footer" class="mobile-nav-link">Contacto</a>
+        <button class="menu-cta mobile-nav-link">Solicitar Visita</button>
+    </div>
+
+    <!-- ═══ PAGE WRAPPER ═══ -->
+    <div class="page-wrap">
+
+        <!-- ── HERO (fills viewport minus stats bar 120px) ── -->
+        <section id="hero-section">
+            <div class="hero-video-wrap">
+                <video autoplay loop muted playsinline>
+                    <source src="./Camera_moves_over_hill_4f3d9fe252.mp4" type="video/mp4">
+                </video>
+            </div>
+            <!-- subtle dark tint on top of video for text legibility -->
+            <div style="position:absolute;inset:0;background:#052f23;opacity:0.45;"></div>
+
+            <!-- Hero content centred in remaining space below nav -->
+            <div
+                style="position:absolute;top:80px;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
+                <div
+                    style="display:flex;flex-direction:column;align-items:center;gap:28px;padding:0 60px;max-width:1440px;width:100%;">
+                    <div data-anim="up" data-delay="1" style="display:flex;flex-direction:column;align-items:center;">
+                        <h1
+                            style="color:#fff;font-size:clamp(36px,4vw,56px);font-weight:400;text-align:center;line-height:1.15;max-width:811px;">
+                            Somos tu mejor aliado de</h1>
+                        <h1
+                            style="color:#fff;font-size:clamp(36px,4vw,56px);font-weight:800;text-align:center;line-height:1.15;max-width:811px;">
+                            reciclaje en Guatemala</h1>
+                    </div>
+                    <p data-anim="up" data-delay="2"
+                        style="color:#7ef0ce;font-size:clamp(15px,1.25vw,18px);text-align:center;line-height:1.7;max-width:671px;">
+                        Soluciones de recolección a medida para empresas y puntos de acopio (Ecospots) para que toda la comunidad pueda contribuir al cambio.
+                    </p>
+                    <div data-anim="up" data-delay="3"
+                        style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;">
+                        <button
+                            style="background:#cef17b;padding:16px 32px;border-radius:40px;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-size:clamp(13px,1vw,16px);font-weight:700;color:#052f23;transition:transform .15s"
+                            onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''">
+                            Descargar Catálogo de Servicios
+                        </button>
+                        <button
+                            style="background:transparent;padding:16px 32px;border-radius:40px;border:2px solid #3de9b5;cursor:pointer;font-family:'Raleway',sans-serif;font-size:clamp(13px,1vw,16px);font-weight:600;color:#3de9b5;transition:background .2s"
+                            onmouseover="this.style.background='rgba(61,233,181,0.1)'"
+                            onmouseout="this.style.background='transparent'">
+                            Ver Ecospots →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── STATS BAR (120px, completes the 100vh with hero) ── -->
+        <section id="stats-bar">
+            <div class="section-inner"
+                style="height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 100px;">
+                <div data-anim="up" data-delay="1"
+                    style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+                    <span class="stat-num" data-target="500" data-suffix="+"
+                        style="color:#052f23;font-size:36px;font-weight:800;">0</span>
+                    <span style="color:#0f8863;font-size:14px;font-weight:500;">Empresas Aliadas</span>
+                </div>
+                <div data-anim="up" data-delay="2"
+                    style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+                    <span class="stat-num" data-target="120" data-suffix="+"
+                        style="color:#052f23;font-size:36px;font-weight:800;">0</span>
+                    <span style="color:#0f8863;font-size:14px;font-weight:500;">Ecospots Activos</span>
+                </div>
+                <div data-anim="up" data-delay="3"
+                    style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+                    <span class="stat-num" data-target="50" data-suffix=" ton"
+                        style="color:#052f23;font-size:36px;font-weight:800;">0</span>
+                    <span style="color:#0f8863;font-size:14px;font-weight:500;">Recicladas al Mes</span>
+                </div>
+                <div data-anim="up" data-delay="4"
+                    style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+                    <span class="stat-num" data-target="99" data-suffix="%"
+                        style="color:#052f23;font-size:36px;font-weight:800;">0</span>
+                    <span style="color:#0f8863;font-size:14px;font-weight:500;">Clientes Satisfechos</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── TEXT ANIMATED ── -->
+        <section id="text-animated-section"
+            style="width:100%;background:#f5fce5;overflow:hidden;display:flex;align-items:center;justify-content:center;height:315px;">
+            <div id="blur-reveal-text"
+                style="font-family:'Raleway',sans-serif;font-size:clamp(24px,3.2vw,40px);font-weight:500;line-height:1.2;color:#000;text-align:center;max-width:809px;padding:0 40px;">
+            </div>
+        </section>
+
+        <!-- ── SERVICIOS B2B — True Sticky Stacking Cards ── -->
+        <section id="b2b-section">
+            <div class="stacked-cards">
+
+                <!-- CARD 1 -->
+                <div class="s-card" id="scard1">
+                    <div class="s-card-inner">
+                        <div class="s-card-text">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div
+                                    style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <span style="font-size:16px;font-weight:800;color:#000;">1</span>
+                                </div>
+                            </div>
+                            <h2
+                                style="font-size:clamp(32px,3.5vw,50px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">
+                                Solicite una visita<br>técnica gratuita</h2>
+                            <p style="font-size:16px;color:#080808;line-height:1.6;max-width:500px;">
+                                Nuestro equipo visita tu empresa sin costo. Evaluamos tus residuos, volúmenes y
+                                necesidades para diseñar un plan de recolección 100% personalizado.
+                            </p>
+                            <a href="#"
+                                style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;transition:transform .15s, box-shadow .2s;"
+                                onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 8px 24px rgba(15,136,99,0.3)'"
+                                onmouseout="this.style.transform=''; this.style.boxShadow='none'">
+                                Ver más ↗
+                            </a>
+                        </div>
+                        <div class="s-card-img"
+                            style="background-image:url('https://images.unsplash.com/photo-1762805544550-f12a8ebceb2e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800');">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2 -->
+                <div class="s-card" id="scard2">
+                    <div class="s-card-inner">
+                        <div class="s-card-text">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div
+                                    style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <span style="font-size:16px;font-weight:800;color:#000;">2</span>
+                                </div>
+                            </div>
+                            <h2
+                                style="font-size:clamp(32px,3.5vw,50px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">
+                                Diseñamos un plan de recolección a tu medida</h2>
+                            <p style="font-size:16px;color:#080808;line-height:1.6;max-width:500px;">
+                                Creamos un cronograma de recolección adaptado a tus operaciones, tipo de residuos y
+                                normativas ambientales vigentes. Flexibilidad total.
+                            </p>
+                            <a href="#"
+                                style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;transition:transform .15s, box-shadow .2s;"
+                                onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 8px 24px rgba(15,136,99,0.3)'"
+                                onmouseout="this.style.transform=''; this.style.boxShadow='none'">
+                                Ver más ↗
+                            </a>
+                        </div>
+                        <div class="s-card-img"
+                            style="background-image:url('https://images.unsplash.com/photo-1617953141905-b27fb1f17d88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800');">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3 -->
+                <div class="s-card" id="scard3">
+                    <div class="s-card-inner">
+                        <div class="s-card-text">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div
+                                    style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <span style="font-size:16px;font-weight:800;color:#000;">3</span>
+                                </div>
+                            </div>
+                            <h2
+                                style="font-size:clamp(32px,3.5vw,50px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">
+                                Retiramos periódicamente y te enviamos reportes</h2>
+                            <p style="font-size:16px;color:#080808;line-height:1.6;max-width:500px;">
+                                Ejecutamos las recolecciones según el plan acordado y te entregamos reportes mensuales
+                                de impacto. Cumplimiento ambiental documentado.
+                            </p>
+                            <a href="#"
+                                style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;transition:transform .15s, box-shadow .2s;"
+                                onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 8px 24px rgba(15,136,99,0.3)'"
+                                onmouseout="this.style.transform=''; this.style.boxShadow='none'">
+                                Ver más ↗
+                            </a>
+                        </div>
+                        <div class="s-card-img"
+                            style="background-image:url('https://images.unsplash.com/photo-1605775380491-f00b6e4f5214?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800');">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stacked-cards-spacer"></div>
+            </div>
+        </section>
+
+        <!-- ── ECOSPOTS ── -->
+        <!-- Negative margin-top makes Ecospots slide over the stacked cards after card 3 -->
+        <section id="ecospots"
+            style="background:#052f23;border-radius:20px 20px 0 0;position:relative;z-index:40;margin-top:24px;">
+            <div class="section-inner" style="padding:80px 100px;display:flex;flex-direction:column;gap:48px;">
+                <div style="display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center;"
+                    data-anim="up">
+                    <div style="background:#0f8863;border-radius:20px;padding:6px 14px;width:fit-content;">
+                        <span style="color:#3de9b5;font-size:12px;font-weight:700;">Para la Comunidad</span>
+                    </div>
+                    <h2
+                        style="color:#fff;font-size:clamp(28px,3vw,44px);font-weight:800;line-height:1.2;max-width:700px;">
+                        Encuentra tu Ecospot más cercano</h2>
+                    <p style="color:#7ef0ce;font-size:17px;line-height:1.7;max-width:640px;text-align:center;">
+                        Llevamos materiales reciclables a puntos de acopio en toda la ciudad. Solo tienes que llevar tus
+                        residuos limpios y clasificados.
+                    </p>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:40px;" data-anim="up">
+                    <div
+                        style="width:100%;background:#073b2b;border:2px solid #0f8863;border-radius:20px;height:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
+                        <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0"
+                            marginwidth="0"
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=-90.56,14.60,-90.50,14.66&amp;layer=mapnik&amp;marker=14.63,-90.53"
+                            style="border: 0;">
+                        </iframe>
+                    </div>
+                    <div style="display:flex;gap:24px;flex-wrap:wrap;" data-anim="up">
+                        <div style="display:flex;align-items:center;gap:16px;flex:1;min-width:220px;">
+                            <div
+                                style="width:48px;height:48px;background:#0f8863;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span style="color:#cef17b;font-size:14px;font-weight:800;">01</span>
+                            </div>
+                            <div>
+                                <div style="color:#fff;font-size:16px;font-weight:700;">Separa en casa</div>
+                                <div style="color:#7ef0ce;font-size:14px;line-height:1.6;">Clasifica papel, plástico,
+                                    vidrio y metal</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:16px;flex:1;min-width:220px;">
+                            <div
+                                style="width:48px;height:48px;background:#0f8863;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span style="color:#cef17b;font-size:14px;font-weight:800;">02</span>
+                            </div>
+                            <div>
+                                <div style="color:#fff;font-size:16px;font-weight:700;">Lleva al Ecospot</div>
+                                <div style="color:#7ef0ce;font-size:14px;line-height:1.6;">Ubica el punto más cercano en
+                                    el mapa y deposítalo</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:16px;flex:1;min-width:220px;">
+                            <div
+                                style="width:48px;height:48px;background:#0f8863;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span style="color:#cef17b;font-size:14px;font-weight:800;">03</span>
+                            </div>
+                            <div>
+                                <div style="color:#fff;font-size:16px;font-weight:700;">Genera impacto real</div>
+                                <div style="color:#7ef0ce;font-size:14px;line-height:1.6;">Tu material se recicla
+                                    correctamente y contribuyes al medio ambiente</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── MATERIALES ── -->
+        <section id="materiales" style="background:#052f23;">
+            <div class="section-inner" style="padding:80px 100px;display:flex;flex-direction:column;gap:48px;">
+                <div style="display:flex;flex-direction:column;gap:12px;" data-anim="up">
+                    <div
+                        style="background:#0f8863;border:1px solid #3de9b5;border-radius:20px;padding:6px 14px;width:fit-content;">
+                        <span style="color:#3de9b5;font-size:12px;font-weight:700;">Directorio de Materiales</span>
+                    </div>
+                    <h2 style="color:#fff;font-size:clamp(28px,3vw,44px);font-weight:800;line-height:1.2;">
+                        Estos son los materiales que reciclamos</h2>
+                </div>
+                <!-- ── Grid de Materiales ── -->
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;">
+                    <div class="mat-card"
+                        style="background:#073b2b;border:1px solid #7ef0ce;border-radius:20px;height:184px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;"
+                        data-anim="up" data-delay="1">
+                        <img src="IQw6L.png" style="height:77px; width:auto; object-fit:contain;" alt="Papel">
+                        <span style="color:#3de9b5;font-size:16px;font-weight:700;">Papel</span>
+                        <span style="color:#17c893;font-size:12px;">Periódicos, revistas</span>
+                    </div>
+                    <div class="mat-card"
+                        style="background:#073b2b;border:1px solid #7ef0ce;border-radius:20px;height:184px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;"
+                        data-anim="up" data-delay="2">
+                        <img src="zLcfo.png" style="height:77px; width:auto; object-fit:contain;" alt="Cartón">
+                        <span style="color:#3de9b5;font-size:16px;font-weight:700;">Cartón</span>
+                        <span style="color:#17c893;font-size:12px;">Cajas y empaques</span>
+                    </div>
+                    <div class="mat-card"
+                        style="background:#073b2b;border:1px solid #7ef0ce;border-radius:20px;height:184px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;"
+                        data-anim="up" data-delay="3">
+                        <img src="76mlm.png" style="height:77px; width:auto; object-fit:contain;" alt="Plástico">
+                        <span style="color:#3de9b5;font-size:16px;font-weight:700;">Plástico</span>
+                        <span style="color:#17c893;font-size:12px;">PET, HDPE, PP</span>
+                    </div>
+                    <div class="mat-card"
+                        style="background:#073b2b;border:1px solid #7ef0ce;border-radius:20px;height:184px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;"
+                        data-anim="up" data-delay="4">
+                        <img src="5TWbo.png" style="height:77px; width:auto; object-fit:contain;" alt="Vidrio">
+                        <span style="color:#3de9b5;font-size:16px;font-weight:700;">Vidrio</span>
+                        <span style="color:#17c893;font-size:12px;">Botellas y frascos</span>
+                    </div>
+                    <div class="mat-card"
+                        style="background:#073b2b;border:1px solid #7ef0ce;border-radius:20px;height:184px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;"
+                        data-anim="up" data-delay="5">
+                        <img src="vi0PN.png" style="height:77px; width:auto; object-fit:contain;" alt="Metal">
+                        <span style="color:#3de9b5;font-size:16px;font-weight:700;">Metal</span>
+                        <span style="color:#17c893;font-size:12px;">Aluminio y hierro</span>
+                    </div>
+                    <div class="mat-card"
+                        style="background:#073b2b;border:1px solid #7ef0ce;border-radius:20px;height:184px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;"
+                        data-anim="up" data-delay="6">
+                        <img src="yC4va.png" style="height:77px; width:auto; object-fit:contain;" alt="Electrónica">
+                        <span style="color:#3de9b5;font-size:16px;font-weight:700;">Electrónica</span>
+                        <span style="color:#17c893;font-size:12px;">E-waste y cables</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── SOBRE NOSOTROS ── -->
+        <section style="background:#f5fce5;">
+            <div class="section-inner" style="padding:80px 100px;">
+                <div style="background:#e6ecd6;border:1px solid #c2c6b3;border-radius:20px;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+                    <div style="display:flex;flex-direction:column;gap:24px;flex:1;min-width:320px;" data-anim="left">
+                        <div style="background:#0f8863;border-radius:20px;padding:6px 14px;width:fit-content;">
+                            <span style="color:#cef17b;font-size:12px;font-weight:700;">Sobre Nosotros</span>
+                        </div>
+                        <h2 style="color:#000;font-size:clamp(28px,2.9vw,42px);font-weight:800;line-height:1.2;max-width:520px;">
+                            Somos un equipo con convicción, serios con el planeta</h2>
+                        <p style="color:#1b1b1b;font-size:16px;line-height:1.8;max-width:520px;">
+                            Somos un equipo apasionado que cree que el reciclaje no debe ser complicado. Con
+                            profesionalismo, cercanía e innovación, construimos puentes entre las empresas y la comunidad
+                            para crear a Guatemala más verde.
+                        </p>
+                        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                            <div style="background:#0f8863;border-radius:16px;padding:20px;width:156px;display:flex;flex-direction:column;gap:8px;">
+                                <span style="color:#cef17b;font-size:14px;font-weight:700;">Innovación</span>
+                                <p style="color:#fff;font-size:12px;line-height:1.5;">Soluciones nuevas para viejos problemas</p>
+                            </div>
+                            <div style="background:#0f8863;border-radius:16px;padding:20px;width:156px;display:flex;flex-direction:column;gap:8px;">
+                                <span style="color:#cef17b;font-size:14px;font-weight:700;">Cercanía</span>
+                                <p style="color:#fff;font-size:12px;line-height:1.5;">Escuchamos y adaptamos a cada necesidad</p>
+                            </div>
+                            <div style="background:#0f8863;border-radius:16px;padding:20px;width:156px;display:flex;flex-direction:column;gap:8px;">
+                                <span style="color:#cef17b;font-size:14px;font-weight:700;">Confianza</span>
+                                <p style="color:#fff;font-size:12px;line-height:1.5;">Transparencia en cada proceso y reporte</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-anim="right"
+                        style="border-radius:24px;background:url('https://images.unsplash.com/photo-1675434303580-98676fd410dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080') center/cover;flex:1;min-width:320px;min-height:480px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── CENTRO DE RECURSOS ── -->
+        <section id="recursos" style="background:#fff;">
+            <div class="section-inner" style="padding:80px 100px;display:flex;flex-direction:column;gap:48px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;"
+                    data-anim="up">
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div style="background:#ebf9ca;border-radius:20px;padding:6px 14px;width:fit-content;">
+                            <span style="color:#0f8863;font-size:12px;font-weight:700;">Blog y Recursos</span>
+                        </div>
+                        <h2 style="color:#052f23;font-size:clamp(26px,3vw,44px);font-weight:800;line-height:1.2;">
+                            Aprende, comparte y contribuye</h2>
+                    </div>
+                    <button
+                        style="border:2px solid #084734;background:transparent;padding:12px 24px;border-radius:40px;cursor:pointer;font-family:'Raleway',sans-serif;font-size:14px;font-weight:600;color:#084734;transition:background .2s"
+                        onmouseover="this.style.background='#08473410'"
+                        onmouseout="this.style.background='transparent'">
+                        Ver todos los artículos
+                    </button>
+                </div>
+                <div style="display:flex;gap:24px;flex-wrap:wrap;">
+                    <div class="blog-card"
+                        style="flex:1;min-width:280px;display:flex;flex-direction:column;background:#f5fce5;border:1px solid #d8f495;border-radius:20px;overflow:hidden;cursor:pointer;"
+                        data-anim="up" data-delay="1">
+                        <div
+                            style="height:200px;background:url('https://images.unsplash.com/photo-1629134287416-1403dd88b791?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800') center/cover;">
+                        </div>
+                        <div style="padding:24px;display:flex;flex-direction:column;gap:12px;">
+                            <span
+                                style="color:#0f8863;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Guía
+                                Práctica</span>
+                            <h3 style="color:#052f23;font-size:18px;font-weight:700;line-height:1.4;">Cómo separar
+                                correctamente tus residuos en 5 pasos</h3>
+                            <p style="color:#084734;font-size:14px;line-height:1.6;">Una guía práctica y visual para que
+                                toda la familia pueda reciclar con facilidad.</p>
+                        </div>
+                    </div>
+                    <div class="blog-card"
+                        style="flex:1;min-width:280px;display:flex;flex-direction:column;background:#f5fce5;border:1px solid #d8f495;border-radius:20px;overflow:hidden;cursor:pointer;"
+                        data-anim="up" data-delay="2">
+                        <div
+                            style="height:200px;background:url('https://images.unsplash.com/photo-1617953141905-b27fb1f17d88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800') center/cover;">
+                        </div>
+                        <div style="padding:24px;display:flex;flex-direction:column;gap:12px;">
+                            <span
+                                style="color:#0f8863;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Sostenibilidad</span>
+                            <h3 style="color:#052f23;font-size:18px;font-weight:700;line-height:1.4;">El impacto del
+                                plástico: por qué reciclar importa más que nunca</h3>
+                            <p style="color:#084734;font-size:14px;line-height:1.6;">Datos e historias que te motivarán
+                                a tomar acción desde hoy.</p>
+                        </div>
+                    </div>
+                    <div class="blog-card"
+                        style="flex:1;min-width:280px;display:flex;flex-direction:column;background:#f5fce5;border:1px solid #d8f495;border-radius:20px;overflow:hidden;cursor:pointer;"
+                        data-anim="up" data-delay="3">
+                        <div
+                            style="height:200px;background:url('https://images.unsplash.com/photo-1605775380491-f00b6e4f5214?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800') center/cover;">
+                        </div>
+                        <div style="padding:24px;display:flex;flex-direction:column;gap:12px;">
+                            <span
+                                style="color:#0f8863;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;">Empresas</span>
+                            <h3 style="color:#052f23;font-size:18px;font-weight:700;line-height:1.4;">Por qué tu empresa
+                                necesita un plan de gestión de residuos ya</h3>
+                            <p style="color:#084734;font-size:14px;line-height:1.6;">Beneficios legales, reputacionales
+                                y económicos del reciclaje corporativo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── NEWSLETTER ── -->
+        <section
+            style="background:#cef17b;padding:80px 100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;text-align:center;min-height:380px;">
+            <div data-anim="up" style="background:#084734;border-radius:20px;padding:6px 14px;width:fit-content;">
+                <span style="color:#cef17b;font-size:12px;font-weight:700;">Boletín Informativo</span>
+            </div>
+            <h2 data-anim="up"
+                style="color:#052f23;font-size:clamp(24px,2.8vw,40px);font-weight:800;line-height:1.2;max-width:700px;">
+                Recibe consejos de reciclaje y noticias de impacto</h2>
+            <p data-anim="up" style="color:#0f8863;font-size:16px;line-height:1.6;max-width:600px;">
+                Suscríbete al boletín mensual de Aquí Reciclo + y marca la diferencia desde tu hogar o empresa.
+            </p>
+            <form data-anim="up" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;"
+                onsubmit="return false">
+                <input type="email" placeholder="tu@correo.com"
+                    style="background:#fff;border:2px solid #0f8863;border-radius:40px;padding:0 24px;width:360px;max-width:80vw;height:52px;font-family:'Raleway',sans-serif;font-size:15px;color:#0f8863;outline:none;">
+                <button type="submit"
+                    style="background:#084734;border:none;border-radius:40px;padding:0 28px;height:52px;cursor:pointer;font-family:'Raleway',sans-serif;font-size:15px;font-weight:700;color:#cef17b;transition:transform .15s"
+                    onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''">
+                    Suscribirme
+                </button>
+            </form>
+        </section>
+
+        <!-- ── FOOTER ── -->
+        <footer id="footer" style="background:#031811;padding:64px 100px;display:flex;flex-direction:column;gap:48px;">
+            <div class="section-inner" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:40px;">
+                <div style="display:flex;flex-direction:column;gap:16px;max-width:280px;">
+                    <div style="display:flex;align-items:center;">
+                        <img src="Logo.svg" alt="Aquí Reciclo +"
+                            style="height:40px; width:auto; flex-shrink:0; filter:brightness(0) invert(1);" />
+                    </div>
+                    <p style="color:#3de9b5;font-size:13px;line-height:1.7;max-width:260px;">
+                        Hacemos del reciclaje una experiencia fácil, profesional y con impacto real para empresas y
+                        comunidades.
+                    </p>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    <span style="color:#cef17b;font-size:13px;font-weight:700;">Servicios</span>
+                    <a href="#" style="color:#7ef0ce;font-size:13px;text-decoration:none;"
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7ef0ce'">Recolección
+                        B2B</a>
+                    <a href="#" style="color:#7ef0ce;font-size:13px;text-decoration:none;"
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7ef0ce'">Ecospots</a>
+                    <a href="#" style="color:#7ef0ce;font-size:13px;text-decoration:none;"
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7ef0ce'">Directorio de
+                        Materiales</a>
+                    <a href="#" style="color:#7ef0ce;font-size:13px;text-decoration:none;"
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7ef0ce'">Solicitar
+                        Visita</a>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    <span style="color:#cef17b;font-size:13px;font-weight:700;">Empresa</span>
+                    <a href="#" style="color:#7ef0ce;font-size:13px;text-decoration:none;"
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7ef0ce'">Sobre Nosotros</a>
+                    <a href="#" style="color:#7ef0ce;font-size:13px;text-decoration:none;"
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7ef0ce'">Misión y
+                        Visión</a>
+                    <a href="#" style="color:#7ef0ce;font-size:13px;text-decoration:none;"
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7ef0ce'">Blog y
+                        Recursos</a>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    <span style="color:#cef17b;font-size:13px;font-weight:700;">Contacto</span>
+                    <a href="#" style="color:#7ef0ce;font-size:13px;text-decoration:none;"
+                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#7ef0ce'">WhatsApp: +503
+                        0000-0000</a>
+                    <a href="mailto:info@aquireciclo.com" style="color:#7ef0ce;font-size:13px;text-decoration:none;"
+                        onmouseover="this.style.color='#fff'"
+                        onmouseout="this.style.color='#7ef0ce'">info@aquireciclo.com</a>
+                    <div style="color:#7ef0ce;font-size:13px;">
+                        <a href="#" style="color:inherit;text-decoration:none;" onmouseover="this.style.color='#fff'"
+                            onmouseout="this.style.color='#7ef0ce'">Instagram</a> /
+                        <a href="#" style="color:inherit;text-decoration:none;" onmouseover="this.style.color='#fff'"
+                            onmouseout="this.style.color='#7ef0ce'">Facebook</a> /
+                        <a href="#" style="color:inherit;text-decoration:none;" onmouseover="this.style.color='#fff'"
+                            onmouseout="this.style.color='#7ef0ce'">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+            <div class="section-inner">
+                <hr style="border:none;border-top:.5px solid #0f8863;margin-bottom:32px;">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                    <span style="color:#17c893;font-size:12px;">© 2025 Aquí Reciclo +. Todos los derechos
+                        reservados.</span>
+                    <span style="color:#17c893;font-size:12px;">
+                        <a href="#" style="color:inherit;text-decoration:none;" onmouseover="this.style.color='#fff'"
+                            onmouseout="this.style.color='#17c893'">Política de Privacidad</a> &nbsp;|&nbsp;
+                        <a href="#" style="color:inherit;text-decoration:none;" onmouseover="this.style.color='#fff'"
+                            onmouseout="this.style.color='#17c893'">Términos de Uso</a>
+                    </span>
+                </div>
+            </div>
+        </footer>
+
+    </div><!-- /page-wrap -->
+
+    <script>
+        /* ══════════════════════════════════════════
+           1. GENERAL ENTRY ANIMATIONS
+        ══════════════════════════════════════════ */
+        (function () {
+            const els = document.querySelectorAll('[data-anim]');
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+                });
+            }, { threshold: 0.12 });
+            els.forEach(el => obs.observe(el));
+        })();
+
+        /* ══════════════════════════════════════════
+           2. TRUE STICKY STACKING CARDS
+           Cards are already sticky via CSS.
+           JS adds .card-visible when a card sticks
+           (top edge hits its sticky position) so the
+           inner content animates in with a delay.
+           It also slightly scales-down earlier cards
+           as later ones come into view.
+        ══════════════════════════════════════════ */
+        (function () {
+            const cards = Array.from(document.querySelectorAll('.s-card'));
+            const stickTops = [96, 108, 120]; // matches CSS top values
+
+            function update() {
+                const scrollY = window.scrollY;
+                cards.forEach((card, i) => {
+                    const rect = card.getBoundingClientRect();
+                    // Evitar demora visual: mostrar contenido cuando apenas el top pasa un buen margen inferior
+                    if (rect.top <= window.innerHeight * 0.82) {
+                        card.classList.add('card-visible');
+                    }
+                    // Scale down earlier cards as the next card overlaps them
+                    if (i < cards.length - 1) {
+                        const nextRect = cards[i + 1].getBoundingClientRect();
+                        const overlap = Math.max(0, (stickTops[i + 1]) - nextRect.top);
+                        const cardH = card.offsetHeight;
+                        // progress: 0 = no overlap → 1 = fully covered
+                        const t = Math.min(1, overlap / (cardH * 0.5));
+                        const scale = 1 - t * 0.03; // up to 3% shrink
+                        card.style.transform = `scale(${scale.toFixed(4)})`;
+                        // Slightly fade older card
+                        card.style.opacity = (1 - t * 0.08).toFixed(3);
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', update, { passive: true });
+            update();
+        })();
+
+        /* ══════════════════════════════════════════
+           3. WORD-BY-WORD BLUR REVEAL
+        ══════════════════════════════════════════ */
+        (function () {
+            const TEXT = "Proveemos servicios de recolección para empresas, mientras creamos una cultura de sostenibilidad en Guatemala";
+            const BLUR0 = 7;
+            const OPAC0 = 0.05;
+            // Efecto más lento y suave: requiere más scroll (70% de la altura de viewport) para completarse
+            const REVEAL_DIST = window.innerHeight * 0.7;
+
+            const container = document.getElementById('blur-reveal-text');
+            const section = document.getElementById('text-animated-section');
+            if (!container || !section) return;
+
+            const words = TEXT.split(' ');
+            const spans = words.map((w, i) => {
+                const sp = document.createElement('span');
+                sp.className = 'blur-word';
+                sp.textContent = w;
+                sp.style.filter = `blur(${BLUR0}px)`;
+                sp.style.opacity = OPAC0;
+                container.appendChild(sp);
+                if (i < words.length - 1) container.appendChild(document.createTextNode(' '));
+                return sp;
+            });
+
+            let active = false, secTop = 0;
+            const io = new IntersectionObserver(([e]) => {
+                active = e.isIntersecting;
+                if (active) { secTop = window.scrollY + section.getBoundingClientRect().top; tick(); }
+            }, { threshold: [0] });
+            io.observe(section);
+
+            function tick() {
+                if (!active) return;
+                const sy = window.scrollY;
+                const secH = section.offsetHeight;
+                const secBottom = secTop + secH;
+                // Progress: 0 when section top just enters viewport, 1 when we've scrolled REVEAL_DIST past that
+                const raw = (sy - (secTop - window.innerHeight)) / REVEAL_DIST;
+                const prog = Math.max(0, Math.min(1, raw));
+
+                spans.forEach((sp, i) => {
+                    const wp = (prog - i / words.length) * words.length;
+                    const p = Math.max(0, Math.min(1, wp));
+                    sp.style.filter = `blur(${(BLUR0 * (1 - p)).toFixed(2)}px)`;
+                    sp.style.opacity = (OPAC0 + (1 - OPAC0) * p).toFixed(3);
+                });
+            }
+            window.addEventListener('scroll', tick, { passive: true });
+            tick();
+        })();
+
+        /* ══════════════════════════════════════════
+           4. STATS BAR — ANIMATED COUNTERS
+           Numbers count up from 0 to target when
+           the stats bar enters the viewport.
+        ══════════════════════════════════════════ */
+        (function () {
+            const statEls = document.querySelectorAll('.stat-num');
+            if (!statEls.length) return;
+
+            const DURATION = 1400; // ms
+            const easeOut = t => 1 - Math.pow(1 - t, 3);
+
+            function animateStat(el) {
+                const target = parseInt(el.dataset.target, 10);
+                const suffix = el.dataset.suffix || '';
+                const start = performance.now();
+                function step(now) {
+                    const t = Math.min(1, (now - start) / DURATION);
+                    const val = Math.round(easeOut(t) * target);
+                    el.textContent = val + suffix;
+                    if (t < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        animateStat(e.target);
+                        obs.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            statEls.forEach(el => obs.observe(el));
+        })();
+
+        /* ─── Hamburger Menu Toggle ─── */
+        (function() {
+            const btn = document.getElementById('hamburger-btn');
+            const menu = document.getElementById('mobile-menu');
+            const links = menu.querySelectorAll('.mobile-nav-link');
+
+            function openMenu() {
+                menu.classList.add('open');
+                btn.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMenu() {
+                menu.classList.remove('open');
+                btn.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+
+            btn.addEventListener('click', function() {
+                menu.classList.contains('open') ? closeMenu() : openMenu();
+            });
+
+            links.forEach(function(link) {
+                link.addEventListener('click', closeMenu);
+            });
+
+            // Close on ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeMenu();
+            });
+        })();
+    </script>
+</body>
+
+</html>
