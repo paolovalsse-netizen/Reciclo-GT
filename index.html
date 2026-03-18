@@ -390,6 +390,11 @@
             margin-top: 12px;
         }
 
+        /* ─── Stats Bar Clones for Mobile Marquee ─── */
+        .marquee-clone {
+            display: none;
+        }
+
         /* ════════════════════════════════════
            MOBILE BREAKPOINT — W ≤ 809px
            Mirroring Landing Page Mobile .pen
@@ -401,11 +406,11 @@
                 padding: 0 20px;
             }
             #site-nav > div:nth-child(2),
-            #site-nav > button:last-child {
+            #site-nav > button:nth-of-type(1) {
                 display: none !important;
             }
             #hamburger-btn {
-                display: flex;
+                display: flex !important;
             }
 
             /* HERO */
@@ -413,13 +418,17 @@
                 height: 703px !important;
                 min-height: 703px !important;
             }
-            #hero-section .hero-content-wrapper {
-                padding: 0 20px;
-                top: 145px;
+            #hero-section > div:last-child {
+                top: 0 !important;
+            }
+            #hero-section > div:last-child > div {
+                padding: 0 16px !important;
+                margin-top: 80px !important;
             }
             #hero-section p[data-anim] {
                 font-size: 16px !important;
                 max-width: 100% !important;
+                padding: 0 !important;
             }
             #hero-section div[data-delay="3"] {
                 flex-direction: column;
@@ -429,15 +438,29 @@
                 width: 100%;
             }
 
-            /* STATS BAR */
+            /* STATS BAR CAROUSEL */
             #stats-bar {
-                height: auto !important;
+                height: 120px !important;
+                overflow: hidden !important;
             }
             #stats-bar .section-inner {
-                flex-direction: column !important;
-                padding: 40px 20px !important;
-                gap: 32px !important;
-                align-items: center;
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                padding: 0 !important;
+                gap: 60px !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                width: max-content !important;
+                animation: marquee 15s linear infinite;
+            }
+            .marquee-clone {
+                display: flex !important;
+            }
+
+            @keyframes marquee {
+                from { transform: translateX(0); }
+                to { transform: translateX(calc(-50% - 30px)); }
             }
 
             /* TEXT ANIMATED */
@@ -453,26 +476,24 @@
 
             /* SERVICIOS B2B */
             #b2b-section {
-                padding: 48px 20px !important;
+                padding: 40px 16px !important;
             }
-            /* Each sticky card becomes non-sticky & stacks */
             .s-card {
-                position: relative !important;
-                top: auto !important;
-                height: auto !important;
-                margin-bottom: 24px;
+                top: 80px !important;
+                height: 80vh !important;
+                margin: 0 !important; /* Overrides desktop margin: 0 100px */
+                border-radius: 24px !important;
             }
             .stacked-cards {
-                height: auto !important;
-                padding-bottom: 0 !important;
+                /* Inherit min-height from desktop to allow scrolling */
+                padding-bottom: 80vh !important;
             }
             .s-card-inner {
                 flex-direction: column !important;
-                padding: 32px 24px !important;
-                gap: 40px !important;
+                padding: 24px 16px !important;
+                gap: 20px !important;
                 border-radius: 24px !important;
-                height: auto !important;
-                min-height: auto !important;
+                height: 100% !important;
             }
             .s-card-text {
                 width: 100% !important;
@@ -480,18 +501,21 @@
             }
             .s-card-img {
                 width: 100% !important;
-                height: 240px !important;
+                flex: 1 !important;
+                min-height: 200px !important;
                 border-radius: 16px !important;
                 flex-shrink: 0 !important;
             }
-            /* Hide the ecospots frame that overlaps after cards on mobile */
+            /* Overlap the ecospots perfectly on top of stacked cards */
             #b2b-section + section[id="ecospots"] {
-                margin-top: 0;
+                margin-top: -80vh !important;
+                position: relative !important;
+                z-index: 50 !important;
             }
 
             /* ECOSPOTS */
             #ecospots {
-                padding: 60px 20px !important;
+                padding: 40px 16px !important;
                 border-radius: 20px 20px 0 0 !important;
             }
             #ecospots > div {
@@ -503,44 +527,50 @@
             }
 
             /* MATERIALES */
-            #materiales {
-                padding: 60px 20px !important;
+            #materiales .section-inner {
+                padding: 40px 16px !important;
             }
             #materiales h2 {
                 font-size: 32px !important;
             }
-            /* 2 columns grid */
+            /* 2 column grid */
             #materiales > div > div:last-child {
                 grid-template-columns: repeat(2, 1fr) !important;
                 gap: 16px !important;
             }
 
             /* SOBRE NOSOTROS */
-            #materiales + section {
-                padding: 60px 20px !important;
+            #materiales + section .section-inner {
+                padding: 40px 16px !important;
             }
-            #materiales + section > div > div {
+            #materiales + section .section-inner > div {
                 flex-direction: column !important;
                 gap: 24px !important;
+                padding: 16px !important;
             }
             #materiales + section h2 {
                 font-size: 28px !important;
+                max-width: 100% !important;
+            }
+            #materiales + section p {
+                max-width: 100% !important;
             }
             /* Hide the decorative photo on mobile */
             #materiales + section div[data-anim="right"] {
                 display: none !important;
             }
             /* Value cards stack */
-            #materiales + section div[style*="gap:16px"] {
+            #materiales + section div[data-anim="left"] > div:last-child {
                 flex-direction: column !important;
+                width: 100%;
             }
-            #materiales + section div[style*="width:156px"] {
+            #materiales + section div[data-anim="left"] > div:last-child > div {
                 width: 100% !important;
             }
 
             /* CENTRO DE RECURSOS */
-            #recursos {
-                padding: 60px 20px !important;
+            #recursos .section-inner {
+                padding: 40px 16px !important;
             }
             #recursos > div > div:first-child {
                 flex-direction: column !important;
@@ -556,7 +586,7 @@
 
             /* NEWSLETTER */
             section[style*="background:#cef17b"] {
-                padding: 60px 20px !important;
+                padding: 40px 16px !important;
                 min-height: auto !important;
             }
             section[style*="background:#cef17b"] h2 {
@@ -577,7 +607,7 @@
 
             /* FOOTER */
             #footer {
-                padding: 40px 20px !important;
+                padding: 40px 16px !important;
             }
             #footer > div > div:first-child {
                 flex-direction: column !important;
@@ -706,6 +736,23 @@
                     style="display:flex;flex-direction:column;gap:4px;align-items:center;">
                     <span class="stat-num" data-target="99" data-suffix="%"
                         style="color:#052f23;font-size:36px;font-weight:800;">0</span>
+                    <span style="color:#0f8863;font-size:14px;font-weight:500;">Clientes Satisfechos</span>
+                </div>
+                <!-- Clones explicitly added to allow infinite marquee in mobile CSS without breaking desktop -->
+                <div class="marquee-clone" style="display:none;flex-direction:column;gap:4px;align-items:center;">
+                    <span style="color:#052f23;font-size:36px;font-weight:800;">500+</span>
+                    <span style="color:#0f8863;font-size:14px;font-weight:500;">Empresas Aliadas</span>
+                </div>
+                <div class="marquee-clone" style="display:none;flex-direction:column;gap:4px;align-items:center;">
+                    <span style="color:#052f23;font-size:36px;font-weight:800;">120+</span>
+                    <span style="color:#0f8863;font-size:14px;font-weight:500;">Ecospots Activos</span>
+                </div>
+                <div class="marquee-clone" style="display:none;flex-direction:column;gap:4px;align-items:center;">
+                    <span style="color:#052f23;font-size:36px;font-weight:800;">50 ton</span>
+                    <span style="color:#0f8863;font-size:14px;font-weight:500;">Recicladas al Mes</span>
+                </div>
+                <div class="marquee-clone" style="display:none;flex-direction:column;gap:4px;align-items:center;">
+                    <span style="color:#052f23;font-size:36px;font-weight:800;">99%</span>
                     <span style="color:#0f8863;font-size:14px;font-weight:500;">Clientes Satisfechos</span>
                 </div>
             </div>
