@@ -160,22 +160,120 @@
             border-bottom: 1px solid #0a3d30;
         }
 
-        /* ─── Sticky Stacking Cards ─── */
-        /*
-          TRUE Stacked-Cards with Sticky Positioning:
-          The outer wrapper is a scroll container sized to create enough scroll room.
-          Each card is sticky with an increasing top value so they literally stack up.
-          Card 2 covers card 1, card 3 covers card 2, etc.
-        */
+        /* ─── Desktop Carousel ─── */
         #b2b-section {
-            background: #f5fce5;
-            padding: 80px 0 0;
+            background: #fff;
         }
 
+        /* Desktop carousel — visible only on desktop */
+        #b2b-carousel {
+            position: relative;
+            width: 100%;
+            height: 596px;
+            overflow: hidden;
+            /* NO top border per user request */
+        }
+        #b2b-carousel .carousel-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        #b2b-carousel .carousel-slide.active {
+            opacity: 1;
+        }
+        #b2b-carousel .carousel-slide .slide-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.6s ease;
+        }
+        #b2b-carousel .carousel-slide:hover .slide-bg {
+            transform: scale(1.04);
+        }
+        /* Gradient: top-to-bottom (rotation -90 in design = 180deg in CSS)
+           #052f23 at top 0% → transparent at 73% */
+        #b2b-carousel .carousel-slide .slide-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #052f23 0%, rgba(5,47,35,0) 73%);
+            pointer-events: none;
+        }
+        /* Floating Step card: left side, full height 509px, width 545px, x:101 */
+        #b2b-carousel .slide-content {
+            position: absolute;
+            top: 0;
+            left: 101px;
+            width: 545px;
+            height: 509px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+            background: #def2ad;
+            border: 1px solid #000;
+            padding: 0 40px;
+            box-sizing: border-box;
+        }
+        /* Carousel arrows: white circle 56x56, cornerRadius 28 */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            font-size: 28px;
+            color: #052f23;
+            transition: box-shadow .2s;
+            font-family: 'Raleway', sans-serif;
+        }
+        .carousel-arrow:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.22); }
+        .carousel-arrow.prev { left: 32px; }
+        .carousel-arrow.next { right: 32px; }
+        /* Dots: frosted pill, y:534 from design — place near bottom */
+        .carousel-dots {
+            position: absolute;
+            bottom: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(217,217,217,0.25);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid #6e6e6e;
+            border-radius: 20px;
+            padding: 0 14px;
+            height: 40px;
+            z-index: 10;
+            box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+        }
+        .carousel-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            border: none;
+            cursor: pointer;
+            transition: background .3s;
+        }
+        .carousel-dot.active { background: #cef17b; }
+
+        /* Mobile sticky cards (hidden on desktop, shown on mobile) */
+        #b2b-cards-mobile { display: none; }
+
+        /* ─── Sticky Stacking Cards ─── */
         .stacked-cards {
-            /* Each card is ~420px tall. With 3 cards and stacking offset:
-               We need (cards-1)*cardHeight extra scroll space for the stacking.
-               Cards stick at top: 80px (nav), 95px, 110px to create the offset illusion. */
             position: relative;
         }
 
@@ -185,7 +283,6 @@
             border: 1px solid #84b413;
             margin: 0 100px;
             overflow: hidden;
-            /* Slight scale for depth illusion; overridden by JS */
             transform-origin: top center;
             transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
         }
@@ -209,15 +306,8 @@
             background: #def2ad;
         }
 
-        /* Space between cards when not stacked yet */
-        .s-card+.s-card {
-            margin-top: 24px;
-        }
-
-        /* Push area: makes page tall enough to scroll through the stack */
-        .stacked-cards-spacer {
-            height: 60vh;
-        }
+        .s-card+.s-card { margin-top: 24px; }
+        .stacked-cards-spacer { height: 60vh; }
 
         /* Inner card layout */
         .s-card-inner {
@@ -279,6 +369,185 @@
             opacity: 1;
             transform: none;
         }
+
+        /* ─── About Us Section ─── */
+        #about-section {
+            background: #f5fce5;
+            position: relative;
+        }
+        /* Desktop: background image wrapper */
+        .about-bg-wrap {
+            position: relative;
+            width: 100%;
+            height: 690px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .about-bg-img {
+            position: absolute;
+            inset: 0;
+            background: url('./aboutImg.png') center/cover no-repeat;
+        }
+        .about-bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: #052f2380;
+        }
+        /* Centered card — design: y:142 in 690px container, x:182 margin */
+        .about-card {
+            position: relative;
+            z-index: 2;
+            background: #e6ecd6;
+            border: 1px solid #000;
+            border-radius: 0;
+            padding: 48px 40px;
+            width: calc(100% - 364px); /* 182px each side */
+            max-width: 1104px;
+        }
+        .about-card-inner {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .about-card-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .about-h2 {
+            color: #000;
+            font-size: clamp(28px, 2.9vw, 42px);
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        .about-p {
+            color: #1b1b1b;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .about-card-illus {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Values bar */
+        .about-values-bar {
+            background: #0f8863;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 100px;
+            border-top: 1px solid #0a3d30;
+            border-bottom: 1px solid #0a3d30;
+        }
+        .about-value-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            text-align: center;
+            flex: 1;
+        }
+        .about-value-title {
+            color: #cef17b;
+            font-size: 22px;
+            font-weight: 700;
+            font-family: 'Raleway', sans-serif;
+        }
+        .about-value-desc {
+            color: #fff;
+            font-size: 12px;
+            line-height: 1.5;
+            font-family: 'Raleway', sans-serif;
+            max-width: 200px;
+        }
+
+        /* ─── Newsletter / Contact ─── */
+        #newsletter-section {
+            background: #cef17b;
+            padding: 80px 100px;
+        }
+        .newsletter-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        /* The cols row: form at top-left, illustration at bottom-right.
+           min-height ensures the row is tall enough for the SVG to drop. */
+        .newsletter-cols {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            min-height: 360px; /* enough for SVG 380px × 380px to sit lower */
+        }
+        .newsletter-left { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+        /* Form: grows down from top */
+        .news-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 694px;
+            max-width: 100%;
+            align-self: flex-start; /* pins to top of the row */
+        }
+        /* Illustration: pins to bottom of the row independently */
+        .newsletter-right {
+            flex-shrink: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            align-self: flex-end; /* bottom of the flex row */
+        }
+        /* Illustration responsive switching */
+        .news-illus-desktop { display: block; }          /* visible on desktop */
+        .news-illus-mobile  { display: none !important; } /* hidden on desktop — !important overrides inline style */
+        .news-form .row2 { display: flex; gap: 12px; }
+        .news-input {
+            background: #fff;
+            border: 2px solid #0f8863;
+            border-radius: 40px;
+            padding: 0 24px;
+            height: 52px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 15px;
+            color: #0f8863;
+            outline: none;
+            width: 100%;
+        }
+        .news-textarea {
+            background: #fff;
+            border: 2px solid #0f8863;
+            border-radius: 24px;
+            padding: 16px 24px;
+            height: 120px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 15px;
+            color: #0f8863;
+            outline: none;
+            width: 100%;
+            resize: none;
+        }
+        .news-btn-wrap { display: flex; align-items: center; width: 100%; padding-top: 12px; }
+        .news-btn {
+            background: #084734;
+            border: none;
+            border-radius: 40px;
+            padding: 0 48px;
+            height: 52px;
+            cursor: pointer;
+            font-family: 'Raleway', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #cef17b;
+            transition: transform .15s;
+            width: 100%;
+        }
+        .news-btn:hover { transform: scale(1.02); }
 
         /* ─── Text animated ─── */
         .blur-word {
@@ -474,26 +743,34 @@
                 padding: 0 !important;
             }
 
-            /* SERVICIOS B2B */
-            #b2b-section {
-                padding: 40px 16px !important;
-            }
+            /* CAROUSEL — hide on mobile, show cards */
+            #b2b-carousel { display: none !important; }
+            #b2b-cards-mobile { display: block !important; padding: 0 !important; }
+            #b2b-section { padding: 0 !important; }
+
+            /* SERVICIOS B2B mobile cards */
             .s-card {
-                top: 80px !important;
-                height: 80vh !important;
-                margin: 0 !important; /* Overrides desktop margin: 0 100px */
+                max-height: 509px !important;
+                height: 509px !important;
+                margin: 0 0 !important;
                 border-radius: 24px !important;
             }
+            .s-card:nth-child(1) { top: 80px !important; }
+            .s-card:nth-child(2) { top: 104px !important; } /* 80 + 24 */
+            .s-card:nth-child(3) { top: 128px !important; } /* 80 + 48 */
+            .s-card+.s-card { margin-top: 24px !important; }
+            /* The spacer: just enough to see last card fully before ecospots */
             .stacked-cards {
-                /* Inherit min-height from desktop to allow scrolling */
-                padding-bottom: 80vh !important;
+                padding-bottom: 128px !important; /* matches top of last card so it lands and then ecospots comes */
             }
+            .stacked-cards-spacer { height: 280px !important; }
             .s-card-inner {
                 flex-direction: column !important;
                 padding: 24px 16px !important;
                 gap: 20px !important;
                 border-radius: 24px !important;
                 height: 100% !important;
+                min-height: unset !important;
             }
             .s-card-text {
                 width: 100% !important;
@@ -502,13 +779,14 @@
             .s-card-img {
                 width: 100% !important;
                 flex: 1 !important;
-                min-height: 200px !important;
+                min-height: 140px !important;
+                max-height: 190px !important;
                 border-radius: 16px !important;
                 flex-shrink: 0 !important;
             }
-            /* Overlap the ecospots perfectly on top of stacked cards */
-            #b2b-section + section[id="ecospots"] {
-                margin-top: -80vh !important;
+            /* Ecospots sits right below the stacked-cards area — no gap needed */
+            #b2b-cards-mobile + section[id="ecospots"] {
+                margin-top: 0 !important;
                 position: relative !important;
                 z-index: 50 !important;
             }
@@ -516,7 +794,7 @@
             /* ECOSPOTS */
             #ecospots {
                 padding: 40px 16px !important;
-                border-radius: 20px 20px 0 0 !important;
+                border-radius: 0 !important;
             }
             #ecospots > div {
                 padding: 0 !important;
@@ -539,33 +817,79 @@
                 gap: 16px !important;
             }
 
-            /* SOBRE NOSOTROS */
-            #materiales + section .section-inner {
-                padding: 40px 16px !important;
+            /* SOBRE NOSOTROS — Mobile */
+            #about-section { background: #f5fce5 !important; }
+            .about-bg-wrap {
+                height: auto !important;
+                min-height: unset !important;
+                background: #f5fce5 !important;
             }
-            #materiales + section .section-inner > div {
-                flex-direction: column !important;
-                gap: 24px !important;
-                padding: 16px !important;
-            }
-            #materiales + section h2 {
-                font-size: 28px !important;
-                max-width: 100% !important;
-            }
-            #materiales + section p {
-                max-width: 100% !important;
-            }
-            /* Hide the decorative photo on mobile */
-            #materiales + section div[data-anim="right"] {
+            .about-bg-img,
+            .about-bg-overlay {
                 display: none !important;
             }
-            /* Value cards stack */
-            #materiales + section div[data-anim="left"] > div:last-child {
-                flex-direction: column !important;
-                width: 100%;
+            .about-card {
+                position: static !important;
+                width: calc(100% - 32px) !important;
+                margin: 20px 16px !important;
+                padding: 16px !important;
+                border-radius: 0 !important;
             }
-            #materiales + section div[data-anim="left"] > div:last-child > div {
+            .about-card-inner {
+                flex-direction: column !important;
+                gap: 16px !important;
+            }
+            .about-card-illus {
                 width: 100% !important;
+                justify-content: center !important;
+            }
+            .about-card-illus img {
+                width: 100% !important;
+                max-width: 360px !important;
+            }
+            .about-h2 {
+                font-size: 28px !important;
+            }
+            .about-values-bar {
+                padding: 20px 16px !important;
+                height: auto !important;
+                flex-direction: column !important;
+                gap: 20px !important;
+                justify-content: center !important;
+            }
+            .about-value-title {
+                font-size: 16px !important;
+            }
+
+            /* NEWSLETTER — mobile */
+            #newsletter-section {
+                padding: 60px 20px !important;
+            }
+            .newsletter-inner {
+                gap: 24px !important;
+            }
+            .newsletter-cols {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 0 !important;
+            }
+            /* Switch illustrations */
+            .news-illus-desktop { display: none !important; }
+            .news-illus-mobile  { display: block !important; width: 100% !important; max-width: 344px !important; }
+            .newsletter-right {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                align-self: auto !important;
+                margin-top: 24px !important;
+                overflow: visible !important;
+            }
+            .news-form {
+                width: 100% !important;
+                align-self: auto !important;
+            }
+            .news-form .row2 {
+                flex-direction: column !important;
             }
 
             /* CENTRO DE RECURSOS */
@@ -584,26 +908,7 @@
                 width: 100% !important;
             }
 
-            /* NEWSLETTER */
-            section[style*="background:#cef17b"] {
-                padding: 40px 16px !important;
-                min-height: auto !important;
-            }
-            section[style*="background:#cef17b"] h2 {
-                font-size: 28px !important;
-                max-width: 100% !important;
-            }
-            section[style*="background:#cef17b"] p {
-                max-width: 100% !important;
-            }
-            section[style*="background:#cef17b"] form {
-                flex-direction: column !important;
-                width: 100% !important;
-            }
-            section[style*="background:#cef17b"] form input,
-            section[style*="background:#cef17b"] form button {
-                width: 100% !important;
-            }
+
 
             /* FOOTER */
             #footer {
@@ -760,124 +1065,137 @@
 
         <!-- ── TEXT ANIMATED ── -->
         <section id="text-animated-section"
-            style="width:100%;background:#f5fce5;overflow:hidden;display:flex;align-items:center;justify-content:center;height:315px;">
+            style="width:100%;background:#f5fce5;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;height:315px;">
+            <!-- Background image with low opacity -->
+            <div style="position:absolute;inset:0;background:url('./Gemini_Generated_Image_nxn4b3nxn4b3nxn4.png') center/cover no-repeat;opacity:0.01;"></div>
             <div id="blur-reveal-text"
-                style="font-family:'Raleway',sans-serif;font-size:clamp(24px,3.2vw,40px);font-weight:500;line-height:1.2;color:#000;text-align:center;max-width:809px;padding:0 40px;">
+                style="position:relative;z-index:1;font-family:'Raleway',sans-serif;font-size:clamp(24px,3.2vw,40px);font-weight:500;line-height:1.2;color:#000;text-align:center;max-width:809px;padding:0 40px;">
             </div>
         </section>
 
-        <!-- ── SERVICIOS B2B — True Sticky Stacking Cards ── -->
+        <!-- ── SERVICIOS B2B — Desktop Carousel ── -->
         <section id="b2b-section">
-            <div class="stacked-cards">
 
-                <!-- CARD 1 -->
-                <div class="s-card" id="scard1">
-                    <div class="s-card-inner">
-                        <div class="s-card-text">
-                            <div style="display:flex;align-items:center;gap:12px;">
-                                <div
-                                    style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                    <span style="font-size:16px;font-weight:800;color:#000;">1</span>
-                                </div>
+            <!-- DESKTOP CAROUSEL -->
+            <div id="b2b-carousel">
+                <!-- Slide 1 -->
+                <div class="carousel-slide active">
+                    <div class="slide-bg" style="background-image:url('./Gemini_Generated_Image_mznup2mznup2mznu.png');"></div>
+                    <div class="slide-gradient"></div>
+                    <div class="slide-content">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span style="font-size:16px;font-weight:800;color:#000;">1</span>
                             </div>
-                            <h2
-                                style="font-size:clamp(32px,3.5vw,50px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">
-                                Solicite una visita<br>técnica gratuita</h2>
-                            <p style="font-size:16px;color:#080808;line-height:1.6;max-width:500px;">
-                                Nuestro equipo visita tu empresa sin costo. Evaluamos tus residuos, volúmenes y
-                                necesidades para diseñar un plan de recolección 100% personalizado.
-                            </p>
-                            <a href="#"
-                                style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;transition:transform .15s, box-shadow .2s;"
-                                onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 8px 24px rgba(15,136,99,0.3)'"
-                                onmouseout="this.style.transform=''; this.style.boxShadow='none'">
-                                Ver más ↗
-                            </a>
                         </div>
-                        <div class="s-card-img"
-                            style="background-image:url('https://images.unsplash.com/photo-1762805544550-f12a8ebceb2e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800');">
-                        </div>
+                        <h2 style="font-size:clamp(32px,3.2vw,50px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">Solicite una visita<br>técnica gratuita</h2>
+                        <p style="font-size:16px;color:#080808;line-height:1.6;">Nuestro equipo visita tu empresa sin costo. Evaluamos tus residuos, volúmenes y necesidades para diseñar un plan de recolección 100% personalizado.</p>
+                        <a href="#" style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;transition:transform .15s, box-shadow .2s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''">Ver más ↗</a>
                     </div>
                 </div>
-
-                <!-- CARD 2 -->
-                <div class="s-card" id="scard2">
-                    <div class="s-card-inner">
-                        <div class="s-card-text">
-                            <div style="display:flex;align-items:center;gap:12px;">
-                                <div
-                                    style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                    <span style="font-size:16px;font-weight:800;color:#000;">2</span>
-                                </div>
+                <!-- Slide 2 -->
+                <div class="carousel-slide">
+                    <div class="slide-bg" style="background-image:url('./pexels-mali-802221 (1).jpg');"></div>
+                    <div class="slide-gradient"></div>
+                    <div class="slide-content">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span style="font-size:16px;font-weight:800;color:#000;">2</span>
                             </div>
-                            <h2
-                                style="font-size:clamp(32px,3.5vw,50px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">
-                                Diseñamos un plan de recolección a tu medida</h2>
-                            <p style="font-size:16px;color:#080808;line-height:1.6;max-width:500px;">
-                                Creamos un cronograma de recolección adaptado a tus operaciones, tipo de residuos y
-                                normativas ambientales vigentes. Flexibilidad total.
-                            </p>
-                            <a href="#"
-                                style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;transition:transform .15s, box-shadow .2s;"
-                                onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 8px 24px rgba(15,136,99,0.3)'"
-                                onmouseout="this.style.transform=''; this.style.boxShadow='none'">
-                                Ver más ↗
-                            </a>
                         </div>
-                        <div class="s-card-img"
-                            style="background-image:url('https://images.unsplash.com/photo-1617953141905-b27fb1f17d88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800');">
-                        </div>
+                        <h2 style="font-size:clamp(32px,3.2vw,50px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">Diseñamos un plan de recolección a tu medida</h2>
+                        <p style="font-size:16px;color:#080808;line-height:1.6;">Creamos un cronograma de recolección adaptado a tus operaciones, tipo de residuos y normativas ambientales vigentes. Flexibilidad total.</p>
+                        <a href="#" style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;transition:transform .15s, box-shadow .2s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''">Ver más ↗</a>
                     </div>
                 </div>
-
-                <!-- CARD 3 -->
-                <div class="s-card" id="scard3">
-                    <div class="s-card-inner">
-                        <div class="s-card-text">
-                            <div style="display:flex;align-items:center;gap:12px;">
-                                <div
-                                    style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                    <span style="font-size:16px;font-weight:800;color:#000;">3</span>
-                                </div>
+                <!-- Slide 3 -->
+                <div class="carousel-slide">
+                    <div class="slide-bg" style="background-image:url('./pexels-mikhail-nilov-7734569.jpg');"></div>
+                    <div class="slide-gradient"></div>
+                    <div class="slide-content">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <span style="font-size:16px;font-weight:800;color:#000;">3</span>
                             </div>
-                            <h2
-                                style="font-size:clamp(32px,3.5vw,50px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">
-                                Retiramos periódicamente y te enviamos reportes</h2>
-                            <p style="font-size:16px;color:#080808;line-height:1.6;max-width:500px;">
-                                Ejecutamos las recolecciones según el plan acordado y te entregamos reportes mensuales
-                                de impacto. Cumplimiento ambiental documentado.
-                            </p>
-                            <a href="#"
-                                style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;transition:transform .15s, box-shadow .2s;"
-                                onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 8px 24px rgba(15,136,99,0.3)'"
-                                onmouseout="this.style.transform=''; this.style.boxShadow='none'">
-                                Ver más ↗
-                            </a>
                         </div>
-                        <div class="s-card-img"
-                            style="background-image:url('https://images.unsplash.com/photo-1605775380491-f00b6e4f5214?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800');">
-                        </div>
+                        <h2 style="font-size:clamp(32px,3.2vw,50px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">Retiramos periódicamente y te enviamos reportes</h2>
+                        <p style="font-size:16px;color:#080808;line-height:1.6;">Ejecutamos las recolecciones según el plan acordado y te entregamos reportes mensuales de impacto. Cumplimiento ambiental documentado.</p>
+                        <a href="#" style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;transition:transform .15s, box-shadow .2s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''">Ver más ↗</a>
                     </div>
                 </div>
-
-                <div class="stacked-cards-spacer"></div>
+                <!-- Arrows -->
+                <button class="carousel-arrow prev" id="carPrev" aria-label="Anterior">&#8249;</button>
+                <button class="carousel-arrow next" id="carNext" aria-label="Siguiente">&#8250;</button>
+                <!-- Dots -->
+                <div class="carousel-dots">
+                    <button class="carousel-dot active" data-idx="0" aria-label="Slide 1"></button>
+                    <button class="carousel-dot" data-idx="1" aria-label="Slide 2"></button>
+                    <button class="carousel-dot" data-idx="2" aria-label="Slide 3"></button>
+                </div>
             </div>
+
+            <!-- MOBILE STICKY CARDS -->
+            <div id="b2b-cards-mobile">
+                <div class="stacked-cards">
+                    <div class="s-card" id="scard1">
+                        <div class="s-card-inner">
+                            <div class="s-card-text">
+                                <div style="display:flex;align-items:center;gap:12px;">
+                                    <div style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:16px;font-weight:800;color:#000;">1</span></div>
+                                </div>
+                                <h2 style="font-size:clamp(28px,5vw,40px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">Solicite una visita técnica gratuita</h2>
+                                <p style="font-size:16px;color:#080808;line-height:1.6;">Nuestro equipo visita tu empresa sin costo. Evaluamos tus residuos, volúmenes y necesidades para diseñar un plan de recolección 100% personalizado.</p>
+                                <a href="#" style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;">Ver más ↗</a>
+                            </div>
+                            <div class="s-card-img" style="background-image:url('./Gemini_Generated_Image_mznup2mznup2mznu.png');"></div>
+                        </div>
+                    </div>
+                    <div class="s-card" id="scard2">
+                        <div class="s-card-inner">
+                            <div class="s-card-text">
+                                <div style="display:flex;align-items:center;gap:12px;">
+                                    <div style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:16px;font-weight:800;color:#000;">2</span></div>
+                                </div>
+                                <h2 style="font-size:clamp(28px,5vw,40px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">Diseñamos un plan de recolección a tu medida</h2>
+                                <p style="font-size:16px;color:#080808;line-height:1.6;">Creamos un cronograma de recolección adaptado a tus operaciones, tipo de residuos y normativas ambientales vigentes. Flexibilidad total.</p>
+                                <a href="#" style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;">Ver más ↗</a>
+                            </div>
+                            <div class="s-card-img" style="background-image:url('./pexels-mali-802221 (1).jpg');"></div>
+                        </div>
+                    </div>
+                    <div class="s-card" id="scard3">
+                        <div class="s-card-inner">
+                            <div class="s-card-text">
+                                <div style="display:flex;align-items:center;gap:12px;">
+                                    <div style="width:40px;height:40px;border-radius:20px;background:#cef17b;border:1px solid #97c037;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:16px;font-weight:800;color:#000;">3</span></div>
+                                </div>
+                                <h2 style="font-size:clamp(28px,5vw,40px);font-weight:500;color:#000;line-height:1.2;letter-spacing:-1px;">Retiramos periódicamente y te enviamos reportes</h2>
+                                <p style="font-size:16px;color:#080808;line-height:1.6;">Ejecutamos las recolecciones según el plan acordado y te entregamos reportes mensuales de impacto. Cumplimiento ambiental documentado.</p>
+                                <a href="#" style="display:inline-flex;align-items:center;gap:4px;background:#0f8863;color:#fff;border:1px solid #04241a;font-size:15px;font-weight:500;padding:12px 20px;border-radius:32px;text-decoration:none;width:fit-content;">Ver más ↗</a>
+                            </div>
+                            <div class="s-card-img" style="background-image:url('./pexels-mikhail-nilov-7734569.jpg');"></div>
+                        </div>
+                    </div>
+                    <div class="stacked-cards-spacer"></div>
+                </div>
+            </div>
+
         </section>
 
         <!-- ── ECOSPOTS ── -->
         <!-- Negative margin-top makes Ecospots slide over the stacked cards after card 3 -->
         <section id="ecospots"
-            style="background:#052f23;border-radius:20px 20px 0 0;position:relative;z-index:40;margin-top:24px;">
+            style="background:#052f23;border-radius:0;position:relative;z-index:40;margin-top:0;border-top:1px solid #052f23;">
             <div class="section-inner" style="padding:80px 100px;display:flex;flex-direction:column;gap:48px;">
-                <div style="display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center;"
+                <div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start;text-align:left;"
                     data-anim="up">
-                    <div style="background:#0f8863;border-radius:20px;padding:6px 14px;width:fit-content;">
+                    <div style="background:#0f8863;border:1px solid #3de9b5;border-radius:20px;padding:6px 14px;width:fit-content;">
                         <span style="color:#3de9b5;font-size:12px;font-weight:700;">Para la Comunidad</span>
                     </div>
                     <h2
-                        style="color:#fff;font-size:clamp(28px,3vw,44px);font-weight:800;line-height:1.2;max-width:700px;">
+                        style="color:#fff;font-size:clamp(28px,3vw,44px);font-weight:800;line-height:1.2;">
                         Encuentra tu Ecospot más cercano</h2>
-                    <p style="color:#7ef0ce;font-size:17px;line-height:1.7;max-width:640px;text-align:center;">
+                    <p style="color:#7ef0ce;font-size:17px;line-height:1.7;">
                         Llevamos materiales reciclables a puntos de acopio en toda la ciudad. Solo tienes que llevar tus
                         residuos limpios y clasificados.
                     </p>
@@ -990,38 +1308,42 @@
         </section>
 
         <!-- ── SOBRE NOSOTROS ── -->
-        <section style="background:#f5fce5;">
-            <div class="section-inner" style="padding:80px 100px;">
-                <div style="background:#e6ecd6;border:1px solid #c2c6b3;border-radius:20px;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
-                    <div style="display:flex;flex-direction:column;gap:24px;flex:1;min-width:320px;" data-anim="left">
-                        <div style="background:#0f8863;border-radius:20px;padding:6px 14px;width:fit-content;">
-                            <span style="color:#cef17b;font-size:12px;font-weight:700;">Sobre Nosotros</span>
+        <section id="about-section">
+            <!-- Desktop: background image with overlay -->
+            <div class="about-bg-wrap">
+                <div class="about-bg-img"></div>
+                <div class="about-bg-overlay"></div>
+                <!-- Centro: tarjeta de contenido -->
+                <div class="about-card" data-anim="up">
+                    <div class="about-card-inner">
+                        <!-- Texto izquierdo -->
+                        <div class="about-card-text">
+                            <div style="background:#0f8863;border-radius:20px;padding:6px 14px;width:fit-content;">
+                                <span style="color:#3de9b5;font-size:12px;font-weight:700;">Sobre Nosotros</span>
+                            </div>
+                            <h2 class="about-h2">Somos un equipo con convicción, serios con el planeta</h2>
+                            <p class="about-p">Somos un equipo apasionado que cree que el reciclaje no debe ser complicado. Con profesionalismo, cercanía e innovación, construimos puentes entre las empresas y la comunidad para crear una El Salvador más verde.</p>
                         </div>
-                        <h2 style="color:#000;font-size:clamp(28px,2.9vw,42px);font-weight:800;line-height:1.2;max-width:520px;">
-                            Somos un equipo con convicción, serios con el planeta</h2>
-                        <p style="color:#1b1b1b;font-size:16px;line-height:1.8;max-width:520px;">
-                            Somos un equipo apasionado que cree que el reciclaje no debe ser complicado. Con
-                            profesionalismo, cercanía e innovación, construimos puentes entre las empresas y la comunidad
-                            para crear a Guatemala más verde.
-                        </p>
-                        <div style="display:flex;gap:16px;flex-wrap:wrap;">
-                            <div style="background:#0f8863;border-radius:16px;padding:20px;width:156px;display:flex;flex-direction:column;gap:8px;">
-                                <span style="color:#cef17b;font-size:14px;font-weight:700;">Innovación</span>
-                                <p style="color:#fff;font-size:12px;line-height:1.5;">Soluciones nuevas para viejos problemas</p>
-                            </div>
-                            <div style="background:#0f8863;border-radius:16px;padding:20px;width:156px;display:flex;flex-direction:column;gap:8px;">
-                                <span style="color:#cef17b;font-size:14px;font-weight:700;">Cercanía</span>
-                                <p style="color:#fff;font-size:12px;line-height:1.5;">Escuchamos y adaptamos a cada necesidad</p>
-                            </div>
-                            <div style="background:#0f8863;border-radius:16px;padding:20px;width:156px;display:flex;flex-direction:column;gap:8px;">
-                                <span style="color:#cef17b;font-size:14px;font-weight:700;">Confianza</span>
-                                <p style="color:#fff;font-size:12px;line-height:1.5;">Transparencia en cada proceso y reporte</p>
-                            </div>
+                        <!-- Ilustración derecha -->
+                        <div class="about-card-illus">
+                            <img src="./Sobre Nosotros.svg" alt="Ilustración Sobre Nosotros" style="width:420px;max-width:100%;height:auto;object-fit:contain;display:block;">
                         </div>
                     </div>
-                    <div data-anim="right"
-                        style="border-radius:24px;background:url('https://images.unsplash.com/photo-1675434303580-98676fd410dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080') center/cover;flex:1;min-width:320px;min-height:480px;">
-                    </div>
+                </div>
+            </div>
+            <!-- Values Stats Bar -->
+            <div class="about-values-bar" data-anim="up">
+                <div class="about-value-item">
+                    <span class="about-value-title">Innovación</span>
+                    <span class="about-value-desc">Soluciones nuevas para viejos problemas</span>
+                </div>
+                <div class="about-value-item">
+                    <span class="about-value-title">Cercanía</span>
+                    <span class="about-value-desc">Escuchamos y adaptamos a cada necesidad</span>
+                </div>
+                <div class="about-value-item">
+                    <span class="about-value-title">Confianza</span>
+                    <span class="about-value-desc">Transparencia en cada proceso y reporte</span>
                 </div>
             </div>
         </section>
@@ -1096,28 +1418,45 @@
             </div>
         </section>
 
-        <!-- ── NEWSLETTER ── -->
-        <section
-            style="background:#cef17b;padding:80px 100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;text-align:center;min-height:380px;">
-            <div data-anim="up" style="background:#084734;border-radius:20px;padding:6px 14px;width:fit-content;">
-                <span style="color:#cef17b;font-size:12px;font-weight:700;">Boletín Informativo</span>
+        <!-- ── NEWSLETTER / CONTACTO ── -->
+        <section id="newsletter-section">
+            <div class="newsletter-inner" data-anim="up">
+                <!-- Title block -->
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <h2 style="color:#052f23;font-size:clamp(28px,2.8vw,40px);font-weight:800;line-height:1.2;">
+                        Habla con nosotros</h2>
+                    <p style="color:#0f8863;font-size:16px;line-height:1.6;max-width:600px;">
+                        Estamos aquí para ayudarte, envíanos un mensaje<br>
+                        y te responderemos en un plazo de 24 horas.
+                    </p>
+                </div>
+                <!-- Two-column row: form + illustration -->
+                <div class="newsletter-cols">
+                    <!-- Form -->
+                    <form class="news-form" onsubmit="return false">
+                        <div class="row2">
+                            <input class="news-input" type="text" placeholder="Nombre">
+                            <input class="news-input" type="text" placeholder="Apellido">
+                        </div>
+                        <div class="row2">
+                            <input class="news-input" type="tel" placeholder="Teléfono">
+                            <input class="news-input" type="text" placeholder="Empresa">
+                        </div>
+                        <input class="news-input" type="email" placeholder="Correo electrónico">
+                        <textarea class="news-textarea" placeholder="Mensaje"></textarea>
+                        <div class="news-btn-wrap">
+                            <button type="submit" class="news-btn">Enviar mensaje</button>
+                        </div>
+                    </form>
+                    <!-- Illustration -->
+                    <div class="newsletter-right">
+                    <!-- Illustration: desktop version (455×231px) -->
+                        <img class="news-illus-desktop" src="./SkB1y.png" alt="Habla con nosotros" style="width:455px;height:auto;display:block;">
+                        <!-- Illustration: mobile version (344×175px) -->
+                        <img class="news-illus-mobile" src="./tGiYE.png" alt="Habla con nosotros" style="width:344px;height:auto;display:block;">
+                    </div>
+                </div>
             </div>
-            <h2 data-anim="up"
-                style="color:#052f23;font-size:clamp(24px,2.8vw,40px);font-weight:800;line-height:1.2;max-width:700px;">
-                Recibe consejos de reciclaje y noticias de impacto</h2>
-            <p data-anim="up" style="color:#0f8863;font-size:16px;line-height:1.6;max-width:600px;">
-                Suscríbete al boletín mensual de Aquí Reciclo + y marca la diferencia desde tu hogar o empresa.
-            </p>
-            <form data-anim="up" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;"
-                onsubmit="return false">
-                <input type="email" placeholder="tu@correo.com"
-                    style="background:#fff;border:2px solid #0f8863;border-radius:40px;padding:0 24px;width:360px;max-width:80vw;height:52px;font-family:'Raleway',sans-serif;font-size:15px;color:#0f8863;outline:none;">
-                <button type="submit"
-                    style="background:#084734;border:none;border-radius:40px;padding:0 28px;height:52px;cursor:pointer;font-family:'Raleway',sans-serif;font-size:15px;font-weight:700;color:#cef17b;transition:transform .15s"
-                    onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''">
-                    Suscribirme
-                </button>
-            </form>
         </section>
 
         <!-- ── FOOTER ── -->
@@ -1203,12 +1542,42 @@
                 entries.forEach(e => {
                     if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
                 });
-            }, { threshold: 0.12 });
+            }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
             els.forEach(el => obs.observe(el));
         })();
 
         /* ══════════════════════════════════════════
-           2. TRUE STICKY STACKING CARDS
+           2. DESKTOP CAROUSEL — auto-advance every 4s
+        ══════════════════════════════════════════ */
+        (function () {
+            const slides = document.querySelectorAll('#b2b-carousel .carousel-slide');
+            const dots   = document.querySelectorAll('.carousel-dot');
+            const prev   = document.getElementById('carPrev');
+            const next   = document.getElementById('carNext');
+            if (!slides.length) return;
+            let current = 0, timer;
+
+            function goTo(idx) {
+                slides[current].classList.remove('active');
+                dots[current].classList.remove('active');
+                current = (idx + slides.length) % slides.length;
+                slides[current].classList.add('active');
+                dots[current].classList.add('active');
+            }
+
+            function startTimer() {
+                clearInterval(timer);
+                timer = setInterval(() => goTo(current + 1), 4000);
+            }
+
+            prev.addEventListener('click', () => { goTo(current - 1); startTimer(); });
+            next.addEventListener('click', () => { goTo(current + 1); startTimer(); });
+            dots.forEach(d => d.addEventListener('click', () => { goTo(+d.dataset.idx); startTimer(); }));
+            startTimer();
+        })();
+
+        /* ══════════════════════════════════════════
+           3. TRUE STICKY STACKING CARDS (mobile)
            Cards are already sticky via CSS.
            JS adds .card-visible when a card sticks
            (top edge hits its sticky position) so the
@@ -1218,7 +1587,7 @@
         ══════════════════════════════════════════ */
         (function () {
             const cards = Array.from(document.querySelectorAll('.s-card'));
-            const stickTops = [96, 108, 120]; // matches CSS top values
+            const stickTops = [80, 104, 128]; // matches mobile CSS top values
 
             function update() {
                 const scrollY = window.scrollY;
