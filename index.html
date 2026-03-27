@@ -13,6 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Raleway:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
         rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <style>
         *,
         *::before,
@@ -22,14 +23,34 @@
             padding: 0;
         }
 
-        html {
-            scroll-behavior: smooth;
+        html.lenis, html.lenis body {
+            height: auto;
+        }
+        .lenis.lenis-smooth {
+            scroll-behavior: auto !important;
+        }
+        .lenis.lenis-smooth [data-lenis-prevent] {
+            overscroll-behavior: contain;
+        }
+        .lenis.lenis-stopped {
+            overflow: hidden;
+        }
+        .lenis.lenis-smooth iframe {
+            pointer-events: none;
         }
 
         body {
             font-family: 'Raleway', sans-serif;
             background: #f4f9f5;
             overflow-x: hidden;
+        }
+
+        /* Hover animation for Cultura de Sostenibilidad icons */
+        .pain-card:hover .pain-icon {
+            transform: translateY(-10px) !important;
+        }
+        .pain-icon {
+            transition: transform 0.3s ease-out !important;
         }
 
         /* ─── Global entry animations ─── */
@@ -112,21 +133,33 @@
             animation-delay: 0.5s;
         }
 
-        /* ─── Sticky nav ─── */
-        #site-nav {
+        /* ─── Floating nav ─── */
+        #site-nav-wrap {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 200;
-            height: 104px;
-            background: #073b2bd9;
+            display: flex;
+            justify-content: center;
+            padding-top: 36px;
+            pointer-events: none;
+        }
+        #site-nav {
+            pointer-events: all;
+            width: 100%;
+            max-width: 1172px;
+            height: 103px;
+            background: #052f23bf;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 60px;
+            border-radius: 0;
+            box-shadow: 0 0 0 1px #052f23;
+            margin: 0 134px;
         }
 
         /* ─── Hero ─── */
@@ -149,7 +182,15 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.24;
+            opacity: 0.35;
+        }
+        /* Hero lime gradient overlay — desktop: 112deg (lime on left), 0%→54% */
+        .hero-gradient-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(112deg, #bfed5266 0%, #bfed5200 54%);
+            pointer-events: none;
+            z-index: 1;
         }
 
         /* Stats bar = exactly 120px, together with hero = 100vh */
@@ -556,6 +597,9 @@
             transition: filter 0.3s ease-out, opacity 0.3s ease-out;
         }
 
+        /* ─── Pain cards (desktop icons hidden on mobile) ─── */
+        .pain-icon { display: block; }
+
         /* ─── Material cards ─── */
         .mat-card {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -670,9 +714,15 @@
         ════════════════════════════════════ */
         @media (max-width: 809px) {
 
-            /* NAV */
+            /* NAV — mobile floating */
+            #site-nav-wrap {
+                padding-top: 32px !important;
+            }
             #site-nav {
-                padding: 0 20px;
+                margin: 0 22px !important;
+                max-width: calc(100% - 44px) !important;
+                height: 80px !important;
+                padding: 0 20px !important;
             }
             #site-nav > div:nth-child(2),
             #site-nav > button:nth-of-type(1) {
@@ -682,29 +732,45 @@
                 display: flex !important;
             }
 
-            /* HERO */
+            /* HERO — mobile */
             #hero-section {
                 height: 703px !important;
                 min-height: 703px !important;
             }
-            #hero-section > div:last-child {
-                top: 0 !important;
+            /* Switch gradient to mobile version: 6deg (lime on left), stops at 0% and 84% */
+            .hero-gradient-overlay {
+                background: linear-gradient(6deg, #bfed5266 0%, #bfed5200 84%) !important;
             }
-            #hero-section > div:last-child > div {
-                padding: 0 16px !important;
-                margin-top: 104px !important;
+            /* Mobile hero content: left-aligned, y:172 from top */
+            #hero-content {
+                align-items: flex-start !important;
+                justify-content: flex-start !important;
+                padding-top: 172px !important;
+                padding-bottom: 0 !important;
             }
-            #hero-section p[data-anim] {
+            #hero-inner {
+                align-items: flex-start !important;
+                padding-left: 22px !important;
+                padding-right: 22px !important;
+                text-align: left !important;
+            }
+            #hero-inner > div:first-child {
+                align-items: flex-start !important;
+            }
+            #hero-inner h1 {
+                text-align: left !important;
+            }
+            #hero-inner p[data-anim] {
                 font-size: 16px !important;
                 max-width: 100% !important;
-                padding: 0 !important;
+                text-align: left !important;
             }
-            #hero-section div[data-delay="3"] {
-                flex-direction: column;
-                width: 100%;
+            #hero-inner div[data-delay="3"] {
+                flex-direction: column !important;
+                width: 100% !important;
             }
-            #hero-section div[data-delay="3"] button {
-                width: 100%;
+            #hero-inner div[data-delay="3"] button {
+                width: 100% !important;
             }
 
             /* STATS BAR CAROUSEL */
@@ -732,7 +798,311 @@
                 to { transform: translateX(calc(-50% - 30px)); }
             }
 
-            /* TEXT ANIMATED */
+        }
+        @media (max-width: 1400px) and (min-width: 1181px) {
+            #propuesta-valor-section > div:first-child { left: -368px !important; }
+            #propuesta-valor-section > div:last-child > div:nth-child(2) { left: -11px !important; }
+            #propuesta-valor-section > div:last-child > div:nth-child(3) { left: 606px !important; }
+            #propuesta-valor-section > div:last-child > div:nth-child(3) > div:first-child { width: 192px !important; }
+            #propuesta-valor-section > div:last-child > div:nth-child(4) { left: 634px !important; }
+            #propuesta-valor-section > div:last-child > div:nth-child(5) { left: 415px !important; }
+            #propuesta-valor-section > div:last-child > div:nth-child(6) { left: 395px !important; }
+        }
+        @media (max-width: 1180px) {
+            /* ========= PROPUESTA DE VALOR — MOBILE =========
+               Matches pen UlSHL: 988px, layout:none
+               Order: H2 → Callout → 2×2 grid → stat card + CTA */
+            #propuesta-valor-section {
+                min-height: unset !important;
+                overflow: visible !important;
+            }
+            /* Center and resize pain card icons on mobile */
+            .pain-icon { 
+                display: block !important;
+                position: relative !important;
+                right: auto !important;
+                bottom: auto !important;
+                width: 89px !important;
+                height: 89px !important;
+                margin: 0 auto 12px auto !important;
+                opacity: 1 !important;
+            }
+            .pain-icon path {
+                stroke: #cef17b !important;
+            }
+            /* Lime rect decorative: right-bottom */
+            #propuesta-valor-section > div:first-child {
+                left: 75px !important;
+                bottom: 0 !important;
+                width: calc(100% - 75px) !important;
+                height: 355px !important;
+                top: auto !important;
+            }
+            /* Inner canvas: switch from fixed-height absolute to auto-height flow */
+            #propuesta-valor-section > div:last-child {
+                height: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                padding: 40px 20px 0 20px !important;
+                gap: 0 !important;
+                box-sizing: border-box !important;
+            }
+            /* ALL absolutely-positioned children → reset to flow */
+            #propuesta-valor-section > div:last-child > div {
+                position: relative !important;
+                left: auto !important; top: auto !important;
+                right: auto !important; bottom: auto !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Hide decorative lime background rectangle on mobile */
+            #propuesta-valor-section > div:first-child {
+                display: none !important;
+            }
+
+            /* 1. H2 Headline: centered, y:40 → margin-bottom to match y:176 callout */
+            #propuesta-valor-section > div:last-child > div:nth-child(1) {
+                order: 1;
+                margin-bottom: 20px;
+                text-align: center !important;
+            }
+            #propuesta-valor-section > div:last-child > div:nth-child(1) h2 {
+                font-size: 28px !important;
+                text-align: center !important;
+                max-width: 100% !important;
+            }
+
+            /* 2. Main photo (empleado) → hidden on mobile */
+            #propuesta-valor-section > div:last-child > div:nth-child(2) {
+                order: 10;
+                display: none !important;
+            }
+
+            /* 3. "Imagen and cards" flex container → show only pain cards in 2×2 grid */
+            #propuesta-valor-section > div:last-child > div:nth-child(3) {
+                order: 3;
+                flex-direction: column !important;
+                gap: 0 !important;
+                height: auto !important;
+            }
+            /* Hide secondary image on mobile */
+            #propuesta-valor-section > div:last-child > div:nth-child(3) > div:first-child {
+                display: none !important;
+            }
+            /* Pain cards: horizontal mobile carousel */
+            #pain-cards-col {
+                order: 3;
+                display: flex !important;
+                flex-direction: row !important;
+                overflow-x: auto !important;
+                scroll-snap-type: x mandatory !important;
+                scrollbar-width: none !important;
+                -webkit-overflow-scrolling: touch !important;
+                gap: 16px !important;
+                margin-bottom: 0px !important;
+                height: auto !important;
+                position: relative !important;
+                left: -20px !important;
+                width: 100vw !important;
+                padding: 0 calc(50vw - 150px) 24px !important;
+                flex: none !important;
+            }
+            #pain-cards-col::-webkit-scrollbar { display: none !important; }
+            #pain-cards-col > div {
+                flex: 0 0 300px !important;
+                max-width: 85vw !important;
+                scroll-snap-align: center !important;
+                align-items: center !important;
+                text-align: center !important;
+                padding: 24px !important;
+                border-radius: 0px !important;
+                border: 1px solid #d6d6d6 !important;
+                min-height: 250px !important;
+                transition: filter 0.3s ease, transform 0.3s ease !important;
+            }
+            #pain-cards-col > div.is-active {
+                filter: blur(0px) !important;
+                transform: scale(1) !important;
+            }
+            #pain-cards-col > div:not(.is-active) {
+                filter: blur(4px) !important;
+                transform: scale(0.85) !important;
+            }
+            /* Show dots container overlapping the active card */
+            #pain-cards-dots {
+                display: flex !important;
+                position: absolute !important;
+                left: 50% !important;
+                bottom: 30px !important;
+                transform: translateX(-50%) !important;
+                z-index: 10 !important;
+                background: rgba(217, 217, 217, 0.20) !important;
+                border: none !important;
+                backdrop-filter: blur(4px) !important;
+                -webkit-backdrop-filter: blur(4px) !important;
+                box-shadow: 0 4px 4px rgba(0,0,0,0.25) !important;
+                border-radius: 20px !important;
+                padding: 6px 14px !important;
+                gap: 16px !important;
+            }
+
+            /* 4. Callout banner → full width, centered, order 2 */
+            #propuesta-valor-section > div:last-child > div:nth-child(4) {
+                order: 2;
+                margin: 0 auto 16px auto !important;
+                max-width: 658px !important;
+                text-align: center !important;
+                padding: 16px 20px !important;
+                height: auto !important;
+                align-items: center !important;
+            }
+            #propuesta-valor-section > div:last-child > div:nth-child(4) p {
+                font-size: 16px !important;
+            }
+
+            /* 5. Dark green stat card → exact dimensions and full bleed */
+            #propuesta-valor-section > div:last-child > div:nth-child(5) {
+                order: 5;
+                width: calc(100% + 40px) !important;
+                margin-left: -20px !important;
+                margin-right: -20px !important;
+                border-radius: 0 !important;
+                padding: 44px 20px 20px !important; /* Mueve todo 12px arriba! */
+                margin-bottom: 0 !important;
+                box-shadow: none !important;
+                margin-top: 0 !important;
+                height: 259px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+            }
+            #propuesta-valor-section > div:last-child > div:nth-child(5) img {
+                width: 128px !important;
+                height: 137px !important;
+            }
+            #propuesta-valor-section > div:last-child > div:nth-child(5) > div > div:nth-child(1) {
+                font-size: 16px !important;
+            }
+            #propuesta-valor-section > div:last-child > div:nth-child(5) > div > div:nth-child(2) {
+                font-size: 38px !important;
+            }
+
+            /* 6. CTA button → accurately overlapping statcard boundary */
+            #propuesta-valor-section > div:last-child > div:nth-child(6) {
+                position: absolute !important;
+                left: 20px !important;
+                right: 20px !important;
+                bottom: 238px !important;
+                width: calc(100% - 40px) !important;
+                padding: 0 !important;
+                z-index: 10 !important;
+            }
+            #propuesta-valor-section > div:last-child > div:nth-child(6) button {
+                width: 100% !important;
+                margin-top: 0 !important;
+                padding: 10px 32px !important;
+                height: 41px !important;
+            }
+
+            /* B2B CTA BANNER mobile transferred here so it activates inline with other components */
+            #b2b-cta-banner {
+                height: 469px !important;
+                border-top: none !important;
+                clip-path: none !important;
+                overflow: hidden !important;
+            }
+            #b2b-cta-banner .banner-container {
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
+            }
+            #b2b-cta-banner .truck-wrapper {
+                position: absolute !important;
+                top: 130px !important;
+                right: -400px !important;
+                left: auto !important;
+                margin: 0 !important;
+                width: 878px !important;
+                height: 468px !important;
+                max-width: none !important;
+                max-height: none !important;
+                aspect-ratio: auto !important;
+                z-index: 3 !important;
+            }
+            #b2b-cta-banner .banner-gradient-mask {
+                display: none !important;
+            }
+            #b2b-cta-banner .section-inner {
+                position: absolute !important;
+                top: 48px !important;
+                left: 0 !important;
+                padding: 0 20px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            #b2b-cta-banner .section-inner > div {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            #b2b-cta-banner .section-inner h2, #b2b-cta-banner .section-inner p {
+                text-align: center !important;
+            }
+            /* Match mobile text sizes */
+            #b2b-cta-banner .section-inner h2:first-child { font-size: 28px !important; }
+            #b2b-cta-banner .section-inner h2:nth-child(2) { font-size: 32px !important; }
+            #b2b-cta-banner .section-inner p { font-size: 28px !important; margin-top: 12px !important; }
+            
+            #b2b-cta-banner .section-inner a {
+                width: 100% !important;
+                justify-content: center !important;
+                margin-top: 16px !important;
+                box-sizing: border-box !important;
+            }
+        }
+
+        /* Scaled down version of B2B CTA Banner from 860px */
+        @media (max-width: 860px) {
+            #b2b-cta-banner .truck-wrapper {
+                width: 541px !important;
+                height: 296px !important;
+                top: 209px !important;
+                right: -260px !important; /* Maintain the right margin chop but scaled down proportionally */
+            }
+        }
+
+        /* Dedicated breakpoint for 469px width requirements */
+        @media (max-width: 469px) {
+            #pain-cards-col > div {
+                flex: 0 0 calc(100vw - 40px) !important;
+                max-width: none !important;
+                border-top-left-radius: 0 !important;
+                border-top-right-radius: 0 !important;
+                border-top: none !important;
+            }
+            #pain-cards-col {
+                padding: 0 20px 24px 20px !important;
+                margin-top: 100px !important; /* Move cards down to make room for absolute callout */
+            }
+            #propuesta-valor-section > div:last-child > div:nth-child(4) {
+                position: absolute !important;
+                left: 20px !important;
+                right: 20px !important;
+                top: 251px !important;
+                width: calc(100% - 40px) !important;
+                margin: 0 !important;
+                z-index: 5 !important;
+            }
+        }
+        @media (max-width: 768px) {
             #text-animated-section {
                 height: auto !important;
                 padding: 40px 20px !important;
@@ -992,34 +1362,35 @@
 
 <body>
 
-    <!-- ═══ FIXED NAV ═══ -->
-    <nav id="site-nav">
-        <div class="flex items-center gap-[12px]" style="flex-shrink:0;">
-            <!-- Logo directly from SVG -->
-            <img src="Logo.svg" alt="Aquí Reciclo +" style="height:56px; width:auto; filter:brightness(0) invert(1);" />
-        </div>
-        <div style="display:flex;align-items:center;gap:36px;">
-            <a href="#b2b-section"
-                style="color:#7ef0ce;font-size:16px;font-weight:500;text-decoration:none;opacity:1;transition:opacity .2s"
-                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Servicios B2B</a>
-            <a href="#ecospots" style="color:#fff;font-size:16px;font-weight:500;text-decoration:none;"
-                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Ecospots</a>
-            <a href="#materiales" style="color:#fff;font-size:16px;font-weight:500;text-decoration:none;"
-                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Materiales</a>
-            <a href="#recursos" style="color:#fff;font-size:16px;font-weight:500;text-decoration:none;"
-                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Guías</a>
-            <a href="#footer" style="color:#fff;font-size:16px;font-weight:500;text-decoration:none;"
-                onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Contacto</a>
-        </div>
-        <button onclick="this.style.transform='scale(0.95)';setTimeout(()=>this.style.transform='',150)"
-            style="background:#cef17b;padding:12px 24px;border-radius:40px;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-size:16px;font-weight:700;color:#084734;transition:transform .15s">
-            Solicitar Visita
-        </button>
-        <!-- Hamburger button — only visible on mobile -->
-        <button id="hamburger-btn" aria-label="Abrir menú" aria-expanded="false">
-            <span></span><span></span><span></span>
-        </button>
-    </nav>
+    <!-- ═══ FLOATING NAV ═══ -->
+    <div id="site-nav-wrap">
+        <nav id="site-nav">
+            <div style="flex-shrink:0;">
+                <img src="Logo.svg" alt="Aquí Reciclo +" style="height:56px; width:auto; filter:brightness(0) invert(1);" />
+            </div>
+            <div style="display:flex;align-items:center;gap:36px;">
+                <a href="#b2b-section"
+                    style="color:#7ef0ce;font-size:16px;font-weight:500;text-decoration:none;opacity:1;transition:opacity .2s"
+                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Servicios B2B</a>
+                <a href="#ecospots" style="color:#fff;font-size:16px;font-weight:500;text-decoration:none;"
+                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Ecospots</a>
+                <a href="#materiales" style="color:#fff;font-size:16px;font-weight:500;text-decoration:none;"
+                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Materiales</a>
+                <a href="#recursos" style="color:#fff;font-size:16px;font-weight:500;text-decoration:none;"
+                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Guías</a>
+                <a href="#footer" style="color:#fff;font-size:16px;font-weight:500;text-decoration:none;"
+                    onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Contacto</a>
+            </div>
+            <button onclick="this.style.transform='scale(0.95)';setTimeout(()=>this.style.transform='',150)"
+                style="background:#cef17b;padding:12px 24px;border-radius:40px;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-size:16px;font-weight:700;color:#084734;transition:transform .15s">
+                Solicitar Visita
+            </button>
+            <!-- Hamburger button — only visible on mobile -->
+            <button id="hamburger-btn" aria-label="Abrir menú" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+    </div>
 
     <!-- ═══ MOBILE MENU OVERLAY ═══ -->
     <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menú de navegación">
@@ -1034,35 +1405,35 @@
     <!-- ═══ PAGE WRAPPER ═══ -->
     <div class="page-wrap">
 
-        <!-- ── HERO (fills viewport minus stats bar 120px) ── -->
+        <!-- ── HERO ── -->
         <section id="hero-section">
             <div class="hero-video-wrap">
                 <video autoplay loop muted playsinline>
                     <source src="./Camera_moves_over_hill_4f3d9fe252.mp4" type="video/mp4">
                 </video>
             </div>
-            <!-- subtle dark tint on top of video for text legibility -->
-            <div style="position:absolute;inset:0;background:#052f23;opacity:0.45;"></div>
+            <!-- Lime gradient overlay (desktop: rotation 292deg) -->
+            <div class="hero-gradient-overlay"></div>
 
-            <!-- Hero content centred in remaining space below nav -->
-            <div
-                style="position:absolute;top:104px;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;">
-                <div
-                    style="display:flex;flex-direction:column;align-items:center;gap:28px;padding:0 60px;max-width:1440px;width:100%;">
-                    <div data-anim="up" data-delay="1" style="display:flex;flex-direction:column;align-items:center;">
+            <!-- Hero content: LEFT-aligned desktop (x:134, y:323 from pen) -->
+            <div id="hero-content"
+                style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:flex-start;padding-top:323px;z-index:2;">
+                <div id="hero-inner"
+                    style="display:flex;flex-direction:column;align-items:flex-start;gap:28px;padding-left:134px;padding-right:60px;max-width:1440px;width:100%;">
+                    <div data-anim="up" data-delay="1" style="display:flex;flex-direction:column;align-items:flex-start;">
                         <h1
-                            style="color:#fff;font-size:clamp(36px,4vw,56px);font-weight:400;text-align:center;line-height:1.15;max-width:811px;">
+                            style="color:#fff;font-size:clamp(36px,4vw,56px);font-weight:400;text-align:left;line-height:1.15;">
                             Somos tu mejor aliado de</h1>
                         <h1
-                            style="color:#fff;font-size:clamp(36px,4vw,56px);font-weight:800;text-align:center;line-height:1.15;max-width:811px;">
+                            style="color:#97ce16;font-size:clamp(36px,4vw,56px);font-weight:800;text-align:left;line-height:1.15;">
                             reciclaje en Guatemala</h1>
                     </div>
                     <p data-anim="up" data-delay="2"
-                        style="color:#7ef0ce;font-size:clamp(15px,1.25vw,18px);text-align:center;line-height:1.7;max-width:671px;">
+                        style="color:#fff;font-size:clamp(15px,1.25vw,18px);text-align:left;line-height:1.7;max-width:671px;">
                         Soluciones de recolección a medida para empresas y puntos de acopio (Ecospots) para que toda la comunidad pueda contribuir al cambio.
                     </p>
                     <div data-anim="up" data-delay="3"
-                        style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;">
+                        style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
                         <button
                             style="background:#cef17b;padding:16px 32px;border-radius:40px;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-size:clamp(13px,1vw,16px);font-weight:700;color:#052f23;transition:transform .15s"
                             onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''">
@@ -1127,18 +1498,185 @@
             </div>
         </section>
 
-        <!-- ── TEXT ANIMATED ── -->
-        <section id="text-animated-section"
-            style="width:100%;background:#f5fce5;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;height:315px;">
-            <!-- Background image with low opacity -->
-            <div style="position:absolute;inset:0;background:url('./Gemini_Generated_Image_nxn4b3nxn4b3nxn4.png') center/cover no-repeat;opacity:0.01;"></div>
-            <div id="blur-reveal-text"
-                style="position:relative;z-index:1;font-family:'Raleway',sans-serif;font-size:clamp(24px,3.2vw,40px);font-weight:500;line-height:1.2;color:#000;text-align:center;max-width:809px;padding:0 40px;">
+        <!-- ── PROPUESTA DE VALOR ── -->
+        <!-- overflow:hidden ensures the employee image is clipped by the section below -->
+        <!-- z-index is set to 1 so the b2b-cta-banner (z-index 2) can seamlessly overlap it -->
+        <section id="propuesta-valor-section" style="width:100%;background:#ebf9ca;overflow:hidden;position:relative;z-index:1;min-height:829px;">
+
+            <!-- Lime rectangle: top-left decorative (x:-288, y:0 — sits behind images at top) -->
+            <div data-anim="up" style="position:absolute;left:-288px;top:348px;width:895px;height:366px;background:#cef17b;pointer-events:none;z-index:0;"></div>
+
+            <!-- Inner canvas: max-width 1440px, center it, height matches design 829px -->
+            <div style="position:relative;max-width:1440px;margin:0 auto;height:829px;overflow:hidden;">
+
+                <!-- H2 Headline: x:119, y:87, width:527px -->
+                <div id="b2b-headline" style="position:absolute;left:119px;top:87px;width:527px;z-index:2;">
+                    <h2 style="font-family:'Raleway',sans-serif;font-size:clamp(26px,2.8vw,38px);font-weight:500;color:#084734;line-height:1.2;">
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">Proveemos</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">servicios</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">de</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">recolección</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">para</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">empresas</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">mientras</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">creamos</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">una</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;font-weight:700;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">cultura</span>
+                        <span class="reveal-word" style="display:inline-block;margin-right:0.25em;font-weight:700;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">de</span>
+                        <span class="reveal-word" style="display:inline-block;font-weight:700;filter:blur(3px);opacity:0.1;transition:filter 0.2s ease-out, opacity 0.2s ease-out;">sostenibilidad</span>
+                    </h2>
+                </div>
+
+                <!-- Main professional photo: x:69, y:283, 561×643px
+                     Bottom is at y:283+643=926px which exceeds section height 829px → naturally clipped -->
+                <div data-anim="up" style="position:absolute;left:69px;top:283px;width:561px;height:643px;border-radius:0;overflow:hidden;z-index:1;">
+                    <img src="./Gemini_Generated_Image_yp7e1iyp7e1iyp7e 1.png"
+                        alt="Profesional Aquí Reciclo+"
+                        style="width:100%;height:100%;object-fit:cover;object-position:top center;">
+                </div>
+
+                <!-- "Imagen and cards" group: x:666, y:141
+                     Contains: secondary photo (285×623) + pain cards (fill_container) side by side, gap:72 -->
+                <div style="position:absolute;left:666px;top:141px;width:715px;height:623px;display:flex;gap:24px;z-index:2;">
+
+                    <!-- Secondary image: 285×623px -->
+                    <div data-anim="up" style="width:285px;height:623px;flex-shrink:0;border-radius:0;overflow:hidden;">
+                        <img src="./Gemini_Generated_Image_k27nsyk27nsyk27n.png"
+                            alt="Servicio de reciclaje"
+                            style="width:100%;height:100%;object-fit:cover;object-position:center top;">
+                    </div>
+
+                    <!-- Pain cards column: fills remaining space, height:623px -->
+                    <div id="pain-cards-col" style="flex:1;height:623px;display:flex;flex-direction:column;gap:20px;">
+                        <!-- Pain Card 1: money-send icon — left:317px top:73px in card, opacity:0.13 -->
+                        <div class="pain-card" data-anim="up" data-delay="1" style="background:#f5fce5;border-radius:0;padding:22px 27px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px;position:relative;overflow:hidden;">
+                            <svg class="pain-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="position:absolute;right:-25px;bottom:-15px;width:106px;height:106px;opacity:0.12;pointer-events:none;">
+                                <path d="M9.5 13.75C9.5 14.72 10.25 15.5 11.17 15.5H13.05C13.85 15.5 14.5 14.82 14.5 13.97C14.5 13.06 14.1 12.73 13.51 12.52L10.5 11.47C9.91 11.26 9.51001 10.94 9.51001 10.02C9.51001 9.17999 10.16 8.48999 10.96 8.48999H12.84C13.76 8.48999 14.51 9.26999 14.51 10.24" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 7.5V16.5" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 6V2H18" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17 7L22 2" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <p style="font-family:'Raleway',sans-serif;font-size:16px;font-weight:600;color:#3d3e3e;line-height:1.2;max-width:276px;">Costos de eliminación elevados</p>
+                            <p style="font-family:'Raleway',sans-serif;font-size:14px;color:#9ca09f;line-height:1.4;max-width:276px;">Pagar por enviar desechos a vertederos es significativamente más caro que gestionar programas de reciclaje o reutilización.</p>
+                        </div>
+                        <!-- Pain Card 2: trash icon — left:341px top:21px, rotate(-19.4deg) -->
+                        <div class="pain-card" data-anim="up" data-delay="2" style="background:#f5fce5;border-radius:0;padding:22px 27px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px;position:relative;overflow:hidden;">
+                            <svg class="pain-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="position:absolute;right:-25px;bottom:-15px;width:106px;height:106px;opacity:0.12;pointer-events:none;">
+                                <path d="M21 5.97998C17.67 5.64998 14.32 5.47998 10.98 5.47998C9 5.47998 7.02 5.57998 5.04 5.77998L3 5.97998" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M8.5 4.97L8.72 3.66C8.88 2.71 9 2 10.69 2H13.31C15 2 15.13 2.75 15.28 3.67L15.5 4.97" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M18.8504 9.14001L18.2004 19.21C18.0904 20.78 18.0004 22 15.2104 22H8.79039C6.00039 22 5.91039 20.78 5.80039 19.21L5.15039 9.14001" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M10.3301 16.5H13.6601" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9.5 12.5H14.5" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <p style="font-family:'Raleway',sans-serif;font-size:16px;font-weight:600;color:#3d3e3e;line-height:1.2;max-width:276px;">Pérdida de valor residual</p>
+                            <p style="font-family:'Raleway',sans-serif;font-size:14px;color:#9ca09f;line-height:1.4;max-width:276px;">Muchos desechos, como metales, plásticos o papel, tienen un valor de mercado que se desperdicia al ser tratados como basura.</p>
+                        </div>
+                        <!-- Pain Card 3: archive-book icon — left:342px top:21px, rotate(-15.6deg) -->
+                        <div class="pain-card" data-anim="up" data-delay="3" style="background:#f5fce5;border-radius:0;padding:22px 27px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px;position:relative;overflow:hidden;">
+                            <svg class="pain-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="position:absolute;right:-25px;bottom:-15px;width:106px;height:106px;opacity:0.12;pointer-events:none;">
+                                <path d="M21 7V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V7C3 4 4.5 2 8 2H16C19.5 2 21 4 21 7Z" stroke="#a9b193" stroke-width="1.13" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M15.5 2V9.85999C15.5 10.3 14.98 10.52 14.66 10.23L12.34 8.09003C12.15 7.91003 11.85 7.91003 11.66 8.09003L9.34003 10.23C9.02003 10.52 8.5 10.3 8.5 9.85999V2H15.5Z" stroke="#a9b193" stroke-width="1.13" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M13.25 14H17.5" stroke="#a9b193" stroke-width="1.13" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 18H17.5" stroke="#a9b193" stroke-width="1.13" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <p style="font-family:'Raleway',sans-serif;font-size:16px;font-weight:600;color:#3d3e3e;line-height:1.2;max-width:276px;">Sanciones y multas legales</p>
+                            <p style="font-family:'Raleway',sans-serif;font-size:14px;color:#9ca09f;line-height:1.4;max-width:276px;">El incumplimiento de normativas ambientales vigentes puede derivar en cargos económicos masivos y procesos judiciales.</p>
+                        </div>
+                        <!-- Pain Card 4: profile-circle icon — left:364px top:59px -->
+                        <div class="pain-card" data-anim="up" data-delay="4" style="background:#f5fce5;border-radius:0;padding:22px 27px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px;position:relative;overflow:hidden;">
+                            <svg class="pain-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                style="position:absolute;right:-25px;bottom:-15px;width:106px;height:106px;opacity:0.12;pointer-events:none;">
+                                <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M20.5901 22C20.5901 18.13 16.7402 15 12.0002 15C7.26015 15 3.41016 18.13 3.41016 22" stroke="#a9b193" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <p style="font-family:'Raleway',sans-serif;font-size:16px;font-weight:600;color:#3d3e3e;line-height:1.2;max-width:276px;">Daño a la reputación de marca</p>
+                            <p style="font-family:'Raleway',sans-serif;font-size:14px;color:#9ca09f;line-height:1.4;max-width:276px;">Los consumidores actuales penalizan financieramente a las empresas que no demuestran un compromiso real.</p>
+                        </div>
+                    </div>
+                    <!-- Dots for mobile carousel -->
+                    <div id="pain-cards-dots" style="display:none; justify-content:center; gap:16px; padding:0; z-index:10;">
+                        <div class="dot active" style="width:7px; height:7px; border-radius:50%; background:#084734; cursor:pointer; transition:background 0.3s;"></div>
+                        <div class="dot" style="width:7px; height:7px; border-radius:50%; background:rgba(156, 160, 159, 0.35); cursor:pointer; transition:background 0.3s;"></div>
+                        <div class="dot" style="width:7px; height:7px; border-radius:50%; background:rgba(156, 160, 159, 0.35); cursor:pointer; transition:background 0.3s;"></div>
+                        <div class="dot" style="width:7px; height:7px; border-radius:50%; background:rgba(156, 160, 159, 0.35); cursor:pointer; transition:background 0.3s;"></div>
+                    </div>
+                </div>
+
+                <!-- b2bCallout: x:694, y:67, width:658px, height:88px
+                     ABOVE images and cards (z-index:5), NOT in flow -->
+                <div data-anim="up"
+                    style="position:absolute;left:694px;top:67px;width:658px;height:88px;background:#e2f7b0;border:1px solid #84b413;border-radius:0;display:flex;align-items:center;justify-content:center;padding:0 24px;z-index:5;">
+                    <p style="font-family:'Raleway',sans-serif;font-size:22px;font-weight:400;color:#000;line-height:1.2;text-align:center;">
+                        ¡Su empresa esta perdiendo dinero por sus desechos!
+                    </p>
+                </div>
+
+                <!-- "Cobertura nacional" group: b2bStatCard x:487, y:478 (above images) -->
+                <!-- b2bStatCard: width:284px, height:288px, fill:#084734, shadow -12x -->
+                <div data-anim="up" data-delay="2"
+                    style="position:absolute;left:487px;top:478px;width:284px;height:288px;background:#084734;border-radius:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:3;box-shadow:-12px 0 23.6px rgba(0,0,0,0.25);">
+                    <!-- Guatemala map SVG -->
+                    <img src="./Guatemala.svg" alt="Guatemala"
+                        style="width:123px;height:auto;filter:invert(69%) sepia(55%) saturate(450%) hue-rotate(58deg) brightness(105%);">
+                    <div style="display:flex;flex-direction:column;align-items:center;">
+                        <div style="color:#f5fce5;font-family:'Raleway',sans-serif;font-size:16px;line-height:1.2;">Tenemos cobertura a nivel</div>
+                        <div style="color:#cef17b;font-family:'Raleway',sans-serif;font-size:38px;font-weight:600;line-height:1.2;">NACIONAL</div>
+                    </div>
+                </div>
+
+                <!-- CTA button: x:467, y:733 (group y:478 + bCta y:255) — overlaps bottom of stat card -->
+                <div data-anim="up" data-delay="3" style="position:absolute;left:467px;top:733px;width:325px;z-index:4;">
+                    <button onclick="document.getElementById('footer').scrollIntoView({behavior:'smooth'})"
+                        style="width:100%;background:#cef17b;padding:14px 20px;border-radius:40px;border:1px solid #84b413;cursor:pointer;font-family:'Raleway',sans-serif;font-size:15px;font-weight:700;color:#052f23;transition:transform .15s;display:flex;align-items:center;justify-content:center;gap:8px;"
+                        onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform=''">
+                        Solicitar una visita ↗
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ── SERVICIOS B2B CTA BANNER ── -->
+        <!-- overflow:visible to unclip the truck image per precise design, but clip-path handles the bottom cutoff -->
+        <section id="b2b-cta-banner" style="background:#084734;width:100%;height:329px;overflow:visible;position:relative;z-index:2;border-top:1px solid rgba(255,255,255,0.08); clip-path: inset(-300px -300px 0 -300px);">
+            
+            <div class="banner-container" style="max-width:1440px; width:100%; height:100%; margin:0 auto; position:relative;">
+                
+                <!-- Truck image right side (Exact 878x468 dimension) -->
+                <div class="truck-wrapper" style="position: absolute; right: -135px; top: -47px; width: 878px; height: 468px; z-index: 0; pointer-events: none;">
+                    <div style="position:absolute;inset:0;background:url('./camion.png') center/contain no-repeat;background-position:right center;"></div>
+                </div>
+
+                <!-- Gradient overlay ONLY affecting the inside of the banner container (Top: 0) so the popping truck head remains unaffected -->
+                <div class="banner-gradient-mask" style="position:absolute; right: -135px; top: 0; bottom: 0; width: 878px; z-index: 1; pointer-events:none; background:linear-gradient(238deg, rgba(191,237,82,0.4) 0%, rgba(191,237,82,0) 65%);"></div>
+
+                <!-- Left content (Absolute positioning) -->
+                <div class="section-inner" style="position:absolute;left:130px;top:51px;z-index:2;display:flex;flex-direction:column;gap:16px;">
+                    <div data-anim="up" style="display:flex;flex-direction:column;gap:4px;">
+                        <h2 style="font-family:'Raleway',sans-serif;font-size:38px;font-weight:400;color:#fff;line-height:1.15;margin:0;">Su empresa necesita</h2>
+                        <h2 style="font-family:'Raleway',sans-serif;font-size:48px;font-weight:700;color:#fff;line-height:1.2;margin:0;">de nuestra ayuda</h2>
+                        <p style="font-family:'Raleway',sans-serif;font-size:38px;font-weight:500;color:#cef17b;line-height:1.2;margin:0;margin-top:4px;">+502 22787042</p>
+                    </div>
+                    <div data-anim="up" data-delay="1" style="margin-top:16px;">
+                        <a href="https://wa.me/50222787042" target="_blank" rel="noopener"
+                            style="display:inline-flex;align-items:center;gap:10px;background:#cef17b;padding:16px 32px;border-radius:40px;border:1px solid #84b413;cursor:pointer;font-family:'Raleway',sans-serif;font-size:16px;font-weight:700;color:#052f23;text-decoration:none;transition:transform .15s;"
+                            onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform=''">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="#052f23" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Hablar por WhatsApp
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- ── SERVICIOS B2B — Desktop Carousel ── -->
-        <section id="b2b-section">
+        <!-- z-index: 1 so the banner truck overlay seamlessly layers above this section -->
+        <section id="b2b-section" style="position:relative;z-index:1;">
 
             <!-- DESKTOP CAROUSEL -->
             <div id="b2b-carousel">
@@ -1770,6 +2308,59 @@
             statEls.forEach(el => obs.observe(el));
         })();
 
+        /* ─── Scroll Reveal for b2bTextBlock ─── */
+        (function() {
+            const container = document.getElementById('b2b-headline');
+            if (!container) return;
+            const words = Array.from(container.querySelectorAll('.reveal-word'));
+            if (!words.length) return;
+
+            const fullRevealDistance = 500; 
+            const initialBlur = 3;
+            const initialOpacity = 0.1;
+            
+            let isVisible = false;
+            let startPosition = 0;
+            let containerHeight = 0;
+
+            const observer = new IntersectionObserver(([entry]) => {
+                if(entry.isIntersecting) {
+                    isVisible = true;
+                    const rect = entry.boundingClientRect;
+                    startPosition = window.scrollY + rect.top;
+                    containerHeight = rect.height;
+                    handleScroll();
+                } else {
+                    isVisible = false;
+                }
+            }, { threshold: 0 });
+
+            observer.observe(container);
+
+            function handleScroll() {
+                if(!isVisible) return;
+                const currentScroll = window.scrollY;
+                const elementTop = startPosition - currentScroll;
+                const visibleHeight = window.innerHeight - elementTop;
+                
+                const rawProgress = (visibleHeight - containerHeight) / (fullRevealDistance - containerHeight);
+                const scrollProgress = Math.max(0, Math.min(1, rawProgress));
+
+                words.forEach((wordElement, index) => {
+                    const wordProgress = (scrollProgress - index / words.length) * words.length;
+                    const progress = Math.max(0, Math.min(1, wordProgress));
+                    
+                    const blurAmount = initialBlur * (1 - progress);
+                    const opacity = initialOpacity + (1 - initialOpacity) * progress;
+                    
+                    wordElement.style.filter = `blur(${blurAmount}px)`;
+                    wordElement.style.opacity = opacity;
+                });
+            }
+
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        })();
+
         /* ─── Hamburger Menu Toggle ─── */
         (function() {
             const btn = document.getElementById('hamburger-btn');
@@ -1802,6 +2393,157 @@
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') closeMenu();
             });
+        })();
+
+        /* ─── Pain Cards Mobile Carousel ─── */
+        (function() {
+            const container = document.getElementById('pain-cards-col');
+            const dots = document.querySelectorAll('#pain-cards-dots .dot');
+            const cards = document.querySelectorAll('#pain-cards-col .pain-card');
+            if (!container || !dots.length) return;
+
+            function updateCarousel() {
+                // Ignore effect on desktop
+                if (window.innerWidth > 1180) {
+                    cards.forEach(c => c.classList.remove('is-active'));
+                    return;
+                }
+
+                let centerTarget = -1;
+                let minDiff = Infinity;
+                const containerCenter = container.scrollLeft + container.clientWidth / 2;
+
+                cards.forEach((card, index) => {
+                    const cardCenter = card.offsetLeft + card.clientWidth / 2 - container.offsetLeft;
+                    const diff = Math.abs(containerCenter - cardCenter);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        centerTarget = index;
+                    }
+                });
+
+                if (centerTarget !== -1) {
+                    cards.forEach((card, i) => {
+                        if (i === centerTarget) {
+                            card.classList.add('is-active');
+                        } else {
+                            card.classList.remove('is-active');
+                        }
+                        if(dots[i]) {
+                            dots[i].style.background = (i === centerTarget) ? "#084734" : "rgba(156, 160, 159, 0.35)";
+                        }
+                    });
+                }
+            }
+
+            container.addEventListener('scroll', updateCarousel, { passive: true });
+            window.addEventListener('resize', updateCarousel, { passive: true });
+            // Initialize on load to ensure at least one card is unblurred
+            updateCarousel();
+            
+            // Allow dots click & programmatic scroll
+            function scrollToCard(index) {
+                if (window.innerWidth > 1180) return;
+                const card = cards[index];
+                const targetLeft = card.offsetLeft - container.offsetLeft - (container.clientWidth - card.clientWidth) / 2;
+                
+                container.style.scrollSnapType = 'none';
+                const start = container.scrollLeft;
+                const change = targetLeft - start;
+                let startTime = null;
+                const duration = 500; // 500ms allows enough time for native-like inertia
+
+                function easeOutQuart(t) { return 1 - (--t) * t * t * t; }
+
+                function animate(currentTime) {
+                    if (startTime === null) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    let progress = timeElapsed / duration;
+                    if (progress > 1) progress = 1;
+                    
+                    container.scrollLeft = start + change * easeOutQuart(progress);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Restore snapping gracefully
+                        setTimeout(() => { container.style.scrollSnapType = 'x mandatory'; }, 50);
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    scrollToCard(index);
+                    resetAutoScroll();
+                });
+            });
+
+            let autoScrollInterval;
+            function startAutoScroll() {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = setInterval(() => {
+                    if (window.innerWidth > 1180) return;
+                    let activeIndex = Array.from(cards).findIndex(c => c.classList.contains('is-active'));
+                    if (activeIndex === -1) activeIndex = 0;
+                    let nextIndex = (activeIndex + 1) % cards.length;
+                    scrollToCard(nextIndex);
+                }, 4000);
+            }
+
+            function resetAutoScroll() {
+                clearInterval(autoScrollInterval);
+                clearTimeout(container.scrollTimeout);
+                container.scrollTimeout = setTimeout(startAutoScroll, 2000);
+            }
+
+            container.addEventListener('touchstart', () => clearInterval(autoScrollInterval), { passive: true });
+            container.addEventListener('touchend', resetAutoScroll, { passive: true });
+            container.addEventListener('scroll', resetAutoScroll, { passive: true });
+
+            startAutoScroll();
+
+            // Initial trigger
+            setTimeout(updateCarousel, 300);
+        })();
+
+        /* ─── Smooth Scroll (Lenis) ─── */
+        (function() {
+            if (typeof Lenis !== 'undefined') {
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    direction: 'vertical',
+                    gestureDirection: 'vertical',
+                    smooth: true,
+                    mouseMultiplier: 1,
+                    smoothTouch: false,
+                    touchMultiplier: 2,
+                    infinite: false
+                });
+
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+
+                requestAnimationFrame(raf);
+
+                // For existing anchor links that relied on CSS scroll-behavior: smooth
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        if (targetId && targetId !== '#') {
+                            const targetEl = document.querySelector(targetId);
+                            if (targetEl) {
+                                lenis.scrollTo(targetEl, { offset: -80 }); // Adjust offset for fixed header if needed
+                            }
+                        }
+                    });
+                });
+            }
         })();
     </script>
 
